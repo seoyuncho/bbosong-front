@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import { NaverMapMarkerOverlay } from '@mj-studio/react-native-naver-map';
 
 // 백엔드 API URL
-const API_BASE_URL = 'http://172.30.1.36:3000';
+const API_URL = 'http://10.122.144.49:3000';
 
 type PlaceSearchProps = {
-  onPlaceSelected: (place: any) => void;
+  mapRef: any;
 };
 
-const PlaceSearch = ({ onPlaceSelected }: PlaceSearchProps): React.JSX.Element => {
+const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [searchMarker, setSearchMarker] = useState<any>(null);
   
   // 네이버 오픈 API를 호출하는 함수
   const handleSearch = async () => {
@@ -20,7 +22,7 @@ const PlaceSearch = ({ onPlaceSelected }: PlaceSearchProps): React.JSX.Element =
       return;
     }
     try {
-      const response = await axios.post(`${API_BASE_URL}/search-place`, {
+      const response = await axios.post(`${API_URL}/search-place`, {
         placeName: query,
       });
       setSearchResults(response.data.places);
@@ -34,12 +36,33 @@ const PlaceSearch = ({ onPlaceSelected }: PlaceSearchProps): React.JSX.Element =
     const cleanedTitle = place.title.replace(/<[^>]*>/g, '');
     setQuery(cleanedTitle); // 검색창에 선택한 장소명 표시
     setSearchResults([]); // 검색 결과 목록 숨기기
-    onPlaceSelected({
-      title: cleanedTitle,
-      address: place.address,
-      latitude: place.mapy / 1e7, // 위도 (Naver API에서 1e7로 나누어야 함)
-      longitude: place.mapx / 1e7, // 경도 (Naver API에서 1e7로 나누어야 함)
-    });
+
+    // 지도 이동
+    if (place && place.mapy && place.mapx) {
+      const latitude = place.mapy / 1e7;
+      const longitude = place.mapx / 1e7;
+      mapRef.current?.animateCameraTo({
+        latitude,
+        longitude,
+        zoom: 20,
+        duration: 1000,
+        easing: 'EaseOut',
+      });
+
+      // 임시 마커 생성
+      setSearchMarker({
+        id: 'search-result',
+        latitude,
+        longitude,
+        caption: cleanedTitle,
+        subCaption: place.address || '',
+      });
+
+      // 10초 후 임시 마커 제거
+      setTimeout(() => {
+        setSearchMarker(null);
+      }, 10000);
+    }
   };
 
   // FlatList 렌더링 함수
@@ -55,7 +78,7 @@ const PlaceSearch = ({ onPlaceSelected }: PlaceSearchProps): React.JSX.Element =
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="장소명을 입력해주세요."
+          placeholder="지역명, 가게명 검색"
           value={query}
           onChangeText={setQuery}
           onSubmitEditing={handleSearch}
@@ -64,7 +87,7 @@ const PlaceSearch = ({ onPlaceSelected }: PlaceSearchProps): React.JSX.Element =
           <Text style={styles.searchButtonText}>검색</Text>
         </TouchableOpacity>
       </View>
-      
+
       {searchResults.length > 0 && (
         <View style={styles.resultsListContainer}>
           <FlatList
@@ -75,6 +98,18 @@ const PlaceSearch = ({ onPlaceSelected }: PlaceSearchProps): React.JSX.Element =
           />
         </View>
       )}
+
+      {/* 검색 결과 임시 마커 오버레이 */}
+      {searchMarker && (
+        <NaverMapMarkerOverlay
+          key={searchMarker.id}
+          latitude={searchMarker.latitude}
+          longitude={searchMarker.longitude}
+          caption={{ text: searchMarker.caption }}
+          subCaption={{ text: searchMarker.subCaption }}
+          image={{ symbol: 'red' }}
+        />
+      )}
     </View>
   );
 };
@@ -82,15 +117,16 @@ const PlaceSearch = ({ onPlaceSelected }: PlaceSearchProps): React.JSX.Element =
 const styles = StyleSheet.create({
   searchComponentContainer: {
     position: 'absolute',
-    top: 50,
-    left: 20,
-    right: 20,
+    top: 20,
+    left: 0,
+    right: 0,
     zIndex: 10,
+    margin: 20,
   },
   searchContainer: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 40,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -100,6 +136,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     padding: 12,
+    textAlign: 'center'
   },
   searchButton: {
     padding: 12,

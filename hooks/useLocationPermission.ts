@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import { Alert, Platform } from 'react-native';
-import BackgroundPermissionModal from '../components/BackgroundPermissionModal';
+import BackgroundPermissionModal from '../components/BackgroundPermission';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 

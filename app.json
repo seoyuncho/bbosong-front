@@ -30,7 +30,7 @@
       [
         "@mj-studio/react-native-naver-map",
         {
-          "client_id": "네이버클라이언트키",
+          "client_id": "f5zgy1p61f",
           "expo-location": {
             "isAndroidForegroundServiceEnabled": true,
             "isAndroidBackgroundLocationEnabled": true
