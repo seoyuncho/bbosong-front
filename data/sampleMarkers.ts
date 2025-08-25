@@ -8,8 +8,8 @@ export interface Marker {
   image: { symbol: string };
   store?: {
     id: number;
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
     name: string;
     address: string;
     category: string;
@@ -28,8 +28,8 @@ export const sampleMarkers: Marker[] = [
     image: { symbol: 'green' },
     store: {
       id: 1,
-      latitude: '37.5642573461',
-      longitude: '126.9815707967',
+      latitude: 37.5642573461,
+      longitude: 126.9815707967,
       name: '명동 성당',
       address: '서울 중구 명동2가',
       category: '관광',
@@ -46,8 +46,8 @@ export const sampleMarkers: Marker[] = [
     image: { symbol: 'blue' },
     store: {
       id: 2,
-      latitude: '37.566872',
-      longitude: '126.978664',
+      latitude: 37.566872,
+      longitude: 126.978664,
       name: '광화문',
       address: '서울 종로구 세종로',
       category: '관광',
@@ -64,8 +64,8 @@ export const sampleMarkers: Marker[] = [
     image: { symbol: 'yellow' },
     store: {
       id: 3,
-      latitude: '37.563032',
-      longitude: '126.975438',
+      latitude: 37.563032,
+      longitude: 126.975438,
       name: '남대문 시장',
       address: '서울 중구 남대문시장',
       category: '관광',

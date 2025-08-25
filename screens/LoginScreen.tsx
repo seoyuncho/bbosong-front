@@ -8,7 +8,7 @@ const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const API_URL = 'http://10.122.145.143:3000';
+  const API_URL = 'http://172.30.1.64:3000';
 
   const handleLogin = async () => {
     try {

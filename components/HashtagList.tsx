@@ -14,7 +14,7 @@ import Cafe from "./src/frame-1707482365.svg";
 import Rain from "./src/frame-1707482363.svg";
 import IconChange from "./src/x.svg";
 
-const API_URL = "http://10.122.144.49:3000";
+const API_URL = "http://172.30.1.64:3000";
 
 const hashtagComponents = [
   { tag: "#hot", Component: Hot },
@@ -119,7 +119,7 @@ const HashtagList = ({
 const styles = StyleSheet.create({
   absoluteContainer: {
     position: "absolute",
-    top: 90,
+    top: 94,
     left: 0,
     right: 0,
     zIndex: 10,

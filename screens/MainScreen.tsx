@@ -3,9 +3,9 @@ import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import Frame1707482143 from "./src/Frame1707482143";
 import MapCard from "./src/Frame1707482142";
 import Ellipse from "./src/ellipse-11.svg";
-import Frame1707482406 from "./src/Frame1707482406";
 import Dots from "./src/dots.svg";
 import { LinearGradient } from "expo-linear-gradient";
+import Icon from './src/bbosong.svg'
 
 const MainScreen = ({ navigation }: any) => {
   return (
@@ -27,17 +27,17 @@ const MainScreen = ({ navigation }: any) => {
           justifyContent: "center",
         }}
       >
-        <Image
-          source={require("./src/bbosong.png")}
-          style={{ width: 59, height: 31, marginTop: 20 }}
-        />
-        <View style={{ margin: 10, elevation: 7, borderRadius: 19 }}>
-          <View style={[styles.view, { backgroundColor: "white" }]}>
-            <Text style={[{ color: "#999" }, styles.textTypo]}>오늘 날씨</Text>
-            <Text style={[{ color: "#537bff" }, styles.textTypo]}>맑음</Text>
+        <View>
+          <Icon />
+          <View style={{ margin: 10, elevation: 7, borderRadius: 19 }}>
+            <View style={[styles.view, { backgroundColor: "white" }]}>
+              <Text style={[{ color: "#999" }, styles.textTypo]}>
+                오늘 날씨
+              </Text>
+              <Text style={[{ color: "#537bff" }, styles.textTypo]}>맑음</Text>
+            </View>
           </View>
         </View>
-        <Dots style={{ marginRight: 10 }} />
       </View>
       <View
         style={{

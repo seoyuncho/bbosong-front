@@ -13,6 +13,9 @@ import PlaceDetail from "../components/PlaceDetail";
 import MapMarkers from "../components/MapMarkers";
 import { sampleMarkers, Marker } from "../data/sampleMarkers";
 import HashtagList from "../components/HashtagList";
+import axios from "axios";
+
+const API_URL = "172.30.1.64";
 
 const MapScreen = (): React.JSX.Element => {
   const { hasPermission } = useLocationPermission();
@@ -25,7 +28,12 @@ const MapScreen = (): React.JSX.Element => {
 
   useEffect(() => {
     const fetchMarkers = async () => {
-      setMarkers(sampleMarkers);
+      try {
+        const response = await axios.get(`http://${API_URL}/store/initialmap`);
+        setMarkers(response.data);
+      } catch (error) {
+        console.error("마커 불러오기 실패:", error);
+      }
     };
 
     if (hasPermission) {
@@ -72,7 +80,7 @@ const MapScreen = (): React.JSX.Element => {
         }}
         ref={mapRef}
       >
-        <MapMarkers markers={markers} onMarkerTap={handleMarkerTap} />
+        <MapMarkers markers={markers} onMarkerTap={(marker) => console.log('Marker tapped:', marker)} />
       </NaverMapView>
       <PlaceSearch mapRef={mapRef} />
       <HashtagList

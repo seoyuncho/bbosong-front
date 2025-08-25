@@ -2,9 +2,11 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { NaverMapMarkerOverlay } from '@mj-studio/react-native-naver-map';
+import Arrow from './src/arrow.svg';
+import { useNavigation } from '@react-navigation/native';
 
 // 백엔드 API URL
-const API_URL = 'http://10.122.144.49:3000';
+const API_URL = 'http://172.30.1.64:3000';
 
 type PlaceSearchProps = {
   mapRef: any;
@@ -14,6 +16,7 @@ const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searchMarker, setSearchMarker] = useState<any>(null);
+  const navigation = useNavigation<any>();
   
   // 네이버 오픈 API를 호출하는 함수
   const handleSearch = async () => {
@@ -76,6 +79,9 @@ const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
   return (
     <View style={styles.searchComponentContainer}>
       <View style={styles.searchContainer}>
+        <TouchableOpacity style={{ margin: 4, backgroundColor: 'white', borderRadius: 50 }} onPress={() => {navigation.navigate("Main")}}>
+          <Arrow width={40} height={40} style={{ width: '100%', marginLeft:4 }} onPress={() => {navigation.navigate("Main")}} />
+        </TouchableOpacity>
         <TextInput
           style={styles.searchInput}
           placeholder="지역명, 가게명 검색"
@@ -132,6 +138,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    color: '#999999',
   },
   searchInput: {
     flex: 1,
