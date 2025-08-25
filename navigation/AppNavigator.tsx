@@ -3,9 +3,15 @@ import LoginScreen from '../screens/LoginScreen';
 import MainScreen from '../screens/MainScreen';
 import MapScreen from '../screens/MapScreen';
 import QRScreen from '../screens/QRScreen';
+import QRScanBorrow from '../screens/QRScanBorrow';
+import QRBorrowCommit from '../screens/QRBorrowCommit';
+import QRBorrowComplete from '../screens/QRBorrowComplete';
+import QRScanReturn from '../screens/QRScanReturn';
+import QRReturnCommit from '../screens/QRReturnCommit';
 import MyPageScreen from '../screens/MyPageScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import FindPasswordScreen from '../screens/FindPasswordScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -17,8 +23,13 @@ export default function AppNavigator() {
       <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
       <Stack.Screen name="Main" component={MainScreen} />
       <Stack.Screen name="Map" component={MapScreen} />
-      <Stack.Screen name="QR" component={QRScreen} />
+      <Stack.Screen name="QRScreen" component={QRScreen} />
       <Stack.Screen name="MyPage" component={MyPageScreen} />
+      <Stack.Screen name="QRScanBorrow" component={QRScanBorrow} />
+      <Stack.Screen name="QRBorrowCommit" component={QRBorrowCommit} />
+      <Stack.Screen name="QRBorrowComplete" component={QRBorrowComplete} />
+      <Stack.Screen name="QRScanReturn" component={QRScanReturn} />
+      <Stack.Screen name="QRReturnCommit" component={QRReturnCommit} />
     </Stack.Navigator>
   );
 }

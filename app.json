@@ -30,8 +30,7 @@
       [
         "@mj-studio/react-native-naver-map",
         {
-          "client_id": "f5zgy1p61f",
-          "expo-location": {
+            "expo-location": {
             "isAndroidForegroundServiceEnabled": true,
             "isAndroidBackgroundLocationEnabled": true
           }
@@ -44,6 +43,12 @@
             "extraMavenRepos": ["https://repository.map.naver.com/archive/maven"]
           }
         }
+      ],
+      [
+        "expo-camera",
+            {
+              "cameraPermission": "접근 권한을 허용해주세요."
+            }
       ]
     ]
   }
