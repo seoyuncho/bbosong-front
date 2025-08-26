@@ -124,7 +124,7 @@ const PlaceSearch = ({
         <TouchableOpacity
           style={{ margin: 4, backgroundColor: "white", borderRadius: 50 }}
           onPress={() => {
-            navigation.navigate("Main");
+            navigation.navigate("");
           }}
         >
           <Arrow

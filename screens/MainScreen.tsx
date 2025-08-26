@@ -84,6 +84,7 @@ const MainScreen = ({ navigation }: any) => {
         </View>
         <TouchableOpacity
           style={{
+            width: "100%",
             backgroundColor: "#111",
             paddingVertical: 8,
             paddingHorizontal: 16,
