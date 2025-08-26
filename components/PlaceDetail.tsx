@@ -8,6 +8,7 @@ import {
   Image,
 } from "react-native";
 import { Marker } from "../data/sampleMarkers";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface PlaceDetailProps {
   isVisible: boolean;
@@ -64,13 +65,39 @@ const PlaceDetail: React.FC<PlaceDetailProps> = ({
           {imageSource && (
             <Image source={imageSource} style={styles.modalImage} />
           )}
-          <View>
+          <View
+            style={{
+              flex: 2,
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              gap: 12,
+              margin: 14,
+            }}
+          >
             <Text style={styles.modalTitle}>{place.caption}</Text>
             <Text style={styles.modalSubtitle}>{place.subCaption}</Text>
-            <Text style={styles.modalText}>{place.description}</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-              <Text style={styles.textStyle}>닫기</Text>
-            </TouchableOpacity>
+            <LinearGradient
+              colors={["#537BFF", "#8EC5FF"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={{
+                width: "100%",
+                height: 35,
+                borderRadius: 40,
+                paddingHorizontal: 14,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 14, color: "white" }}>
+                현재 남은 우산
+              </Text>
+              <Text style={{ fontSize: 14, color: "white" }}>
+                22/30
+              </Text>
+            </LinearGradient>
           </View>
         </View>
       </View>
@@ -83,20 +110,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    margin: 20,
   },
   modalImage: {
-    width: 120,
-    height: 120,
+    flex: 1,
+    height: "100%",
     borderRadius: 12,
-    marginBottom: 16,
     resizeMode: "cover",
+    marginRight: 4,
   },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    borderRadius: 22,
+    padding: 14,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -104,34 +130,22 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: "80%",
+    shadowRadius: 22,
+    elevation: 7,
+    width: "100%",
+    height: "30%",
+    flexDirection: "row",
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: "bold",
-    marginBottom: 10,
   },
   modalSubtitle: {
-    fontSize: 16,
+    fontSize: 12,
     color: "#666",
-    marginBottom: 15,
   },
   modalText: {
     fontSize: 14,
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  closeButton: {
-    backgroundColor: "#2196F3",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
     textAlign: "center",
   },
 });
