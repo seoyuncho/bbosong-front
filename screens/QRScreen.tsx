@@ -34,7 +34,10 @@ export default function QRScreen() {
         </View>
 
         {/* 카드 영역 */}
-        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("QRScanBorrow" as never)}>
+        <TouchableOpacity style={styles.card} 
+            //onPress={() => navigation.navigate("QRScanBorrow" as never)}
+            onPress={() => navigation.navigate("QRBorrowRecommend" as never)}
+          >
             <View>
             <Text style={styles.cardTitle}><Text style={styles.blue}>뽀송이</Text> 대여</Text>
             <Text style={styles.cardSubtitle}>우산을 대여해요</Text>
@@ -45,7 +48,10 @@ export default function QRScreen() {
             </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("QRScanReturn" as never)}>
+        <TouchableOpacity style={styles.card} 
+          // onPress={() => navigation.navigate("QRScanReturn" as never)}
+          onPress={()=>navigation.navigate("QRReturnReward" as never)}
+          >
             <View>
             <Text style={styles.cardTitle}><Text style={styles.blue}>뽀송이</Text> 반납</Text>
             <Text style={styles.cardSubtitle}>우산을 반납해요</Text>

@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import axios from 'axios';
 
 export default function QRBorrowComplete() {
@@ -87,7 +88,7 @@ export default function QRBorrowComplete() {
       </View>
 
       {/* 하단 버튼 */}
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("qrMain" as never)}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QRBorrowRecommend" as never)}>
         <Text style={styles.buttonText}>확인</Text>
       </TouchableOpacity>
     </LinearGradient>
@@ -97,82 +98,84 @@ export default function QRBorrowComplete() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    paddingTop: 50,
-    paddingHorizontal: 20,
+    paddingHorizontal: wp("5%"),
+    paddingTop: hp("2%"),
+    justifyContent: "space-between",
+    paddingBottom: hp("2%"),
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: hp("5%"),
+    justifyContent: "space-between",
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: wp("5%"),
+    fontWeight: "600",
+    color: "#111",
   },
   content: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: 20,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: hp("5%"),
   },
   depositText: {
-    color: '#537BFF',
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 5,
-    marginTop: 20,
+    fontSize: wp("4.5%"),
+    color: "#111",
+    marginBottom: hp("2%"),
+    textAlign: "center",
   },
   mainText: {
-    fontSize: 22,
-    fontWeight: '600',
-    marginBottom: 50,
+    fontSize: wp("6%"),
+    fontWeight: "600",
+    color: "#111",
+    textAlign: "center",
+    marginBottom: hp("4%"),
   },
   checkCircle: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: '#537BFF80',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 30,
+    width: wp("40%"),
+    height: wp("40%"),
+    borderRadius: wp("20%"),
+    backgroundColor: "#A1ACF2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: hp("5%"),
+    marginBottom: hp("5%"),
   },
   timeInfo: {
-    marginTop: 40,
-    marginBottom: 20,
+    alignItems: "center",
+    marginBottom: hp("3%"),
   },
   timeText: {
-    fontSize: 20,
-    color: '#111111',
-    marginBottom: 5,
-    fontWeight: '600',
-    textAlign: 'left',
+    fontSize: wp("5%"),
+    fontWeight: "600",
+    color: "#111",
+    marginBottom: hp("1%"),
   },
   timeHighlight: {
-    color: '#537BFF',
-    fontWeight: '600',
+    color: "#537BFF",
+    fontWeight: "600",
   },
   noticeText: {
-    fontSize: 16,
-    color: '#34343480',
-    textAlign: 'center',
-    lineHeight: 18,
+    fontSize: wp("4.5%"),
+    textAlign: "center",
+    color: "#343434",
+    opacity: 0.7,
+    lineHeight: hp("3%"),
   },
   button: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-    width: '90%',
-    height: 46,
-    borderRadius: 40,
-    backgroundColor: '#537BFF',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#537BFF",
+    borderRadius: wp("5%"),
+    paddingVertical: hp("1.5%"),
+    alignItems: "center",
+    marginBottom: hp("7%"),
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: "#fff",
+    fontSize: wp("4.5%"),
+    fontWeight: "600",
   },
 });
+
+

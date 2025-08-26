@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from "react-native-vector-icons/Ionicons";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+
 import axios from 'axios';
 
 export default function QRBorrowCommit() {
@@ -43,11 +45,10 @@ export default function QRBorrowCommit() {
     >
       {/* 상단 네비게이션 */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity  
           onPress={() => navigation.navigate("QRScreen" as never)}
         >
-          <Ionicons name="arrow-back" size={24} color="#000" />
+          <Icon name="arrow-back" size={wp("6%")} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>뽀송이 대여</Text>
       </View>
@@ -88,81 +89,82 @@ export default function QRBorrowCommit() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    paddingHorizontal: wp("5%"),
+    paddingTop: hp("2%"),
+    justifyContent: "space-between",
+    paddingBottom: hp("2%"),
+    alignItems: "center",
   },
   header: {
-    position: 'absolute',
-    top: 50,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: hp("5%"),
+    justifyContent: "space-between",
+    width: "100%",
   },
-
-  backButton: {
-    position: 'absolute',
-    left: 20,
-  },
-
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#111111',
+    fontSize: wp("5%"),
+    fontWeight: "600",
+    color: "#111",
+    textAlign: "center",
+    flex: 1,
   },
   subTitle: {
-    fontSize: 18,
-    color: '#537BFF',
-    marginTop: 100,
+    fontSize: wp("4.5%"),
+    color: "#537BFF",
+    marginTop: hp("5%"),
+    fontWeight: "600",
+    textAlign: "center",
   },
   code: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#111111',
-    marginTop: 8,
-  },
-  infoBoxOverlay: {
-    position: 'absolute',
-    bottom: 90,
-    alignItems: 'center',
+    fontSize: wp("6%"),
+    fontWeight: "600",
+    color: "#111",
+    marginTop: hp("1%"),
+    textAlign: "center",
   },
   image: {
-    width: '90%',
-    height: 500,
-    aspectRatio: 1,
-    bottom: '10%',
+    width: wp("90%"),
+    height: hp("50%"),
+    resizeMode: "contain",
+    marginTop: hp("3%"),
+  },
+  infoBoxOverlay: {
+    position: "absolute",
+    bottom: hp("12%"),
+    alignItems: "center",
+    width: "100%",
   },
   infoText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#111111',
+    fontSize: wp("5%"),
+    fontWeight: "600",
+    color: "#111",
+    marginBottom: hp("1%"),
   },
   highlight: {
-    color: '#537BFF',
+    color: "#537BFF",
+    fontWeight: "600",
   },
   subInfo: {
-    marginTop: 6,
-    fontSize: 16,
-    color: '#111111',
+    fontSize: wp("4%"),
+    color: "#343434",
     opacity: 0.7,
+    textAlign: "center",
   },
   button: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-    width: '90%',
-    height: 46,
-    borderRadius: 40,
-    backgroundColor: '#537BFF',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#537BFF",
+    borderRadius: wp("5%"),
+    paddingVertical: hp("1.5%"),
+    alignItems: "center",
+    marginBottom: hp("5%"),
+    width: "90%",
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: "#fff",
+    fontSize: wp("4.5%"),
+    fontWeight: "600",
   },
 });

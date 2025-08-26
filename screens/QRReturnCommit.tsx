@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from "react-native-vector-icons/Ionicons";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function QRReturnCommit() {
   const navigation = useNavigation();
@@ -74,22 +75,20 @@ export default function QRReturnCommit() {
     >
       {/* 상단 네비게이션 */}
       <View style={styles.header}>
-        <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={() => navigation.navigate("QRScreen" as never)}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("QRReturnCommit" as never)}
         >
-          <Ionicons name="arrow-back" size={24} color="#000" />
+          <Icon name="arrow-back" size={wp("6%")} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>뽀송이 반납</Text>
+        <Text style={styles.headerTitle}>뽀송이 대여</Text>
+        <View style={{ width: wp("5%") }} />
       </View>
-
-      {/* 텍스트 */}
-      <Text style={styles.subTitle}>
-        뽀송이 <Text style={styles.code}>{stationName}</Text>
-      </Text>
-      <Text style={styles.title}>우산을 반납하시겠습니까?</Text>
-
-      <View style={{ width: '90%', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+      <View style={styles.content}>
+        {/* 텍스트 */}
+        <Text style={styles.subTitle}>
+          뽀송이 <Text style={styles.title}>{stationName}</Text>
+        </Text>
+        <Text style={styles.title}>우산을 반납하시겠습니까?</Text>
         <Image
             source={require('../assets/umbrella_borrow.png')}
             style={styles.image}
@@ -97,9 +96,9 @@ export default function QRReturnCommit() {
         />
         <View style={styles.infoBoxOverlay}>
             <Text style={styles.infoText}>
-            사용 시간: <Text style={styles.highlight}>{usedTime}</Text>
+            사용한 시간: <Text style={styles.highlight}>{usedTime}</Text>
             </Text>
-            <Text style={styles.subInfo}>
+            <Text style={styles.infoText}>
             반납시간: {returnTimeText}
             </Text>
             <Text style={styles.subInfo}>
@@ -119,89 +118,168 @@ export default function QRReturnCommit() {
   );
 }
 
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'center',
+//   },
+//   header: {
+//     position: 'absolute',
+//     top: 50,
+//     left: 0,
+//     right: 0,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+
+//   backButton: {
+//     position: 'absolute', // 왼쪽에 고정
+//     left: 20,
+//   },
+
+//   headerTitle: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     color: '#111111',
+//   },
+//   subTitle: {
+//     fontSize: 18,
+//     color: '#537BFF',
+//     marginTop: 100,
+//   },
+//   code: {
+//     fontWeight: '600',
+//   },
+//   title: {
+//     fontSize: 22,
+//     fontWeight: 'bold',
+//     color: '#111111',
+//     marginTop: 8,
+//   },
+//   infoBoxOverlay: {
+//     position: 'absolute',
+//     bottom: 90, // 이미지 아래쪽에서 50 정도 위로 올리기
+//     alignItems: 'center',
+//   },
+//   image: {
+//     width: '90%',   // 화면 폭의 90%
+//     height: 500,
+//     aspectRatio: 1, // 정사각 비율 유지
+//     bottom: '10%',
+//   },
+
+//   infoBox: {
+//     alignItems: 'center',
+//   },
+//   infoText: {
+//     fontSize: 20,
+//     fontWeight: '600',
+//     color: '#111111',
+//   },
+//   highlight: {
+//     color: '#537BFF',
+//   },
+//   subInfo: {
+//     marginTop: 6,
+//     fontSize: 16,
+//     color: '#111111',
+//     opacity: 0.7,
+//   },
+//   button: {
+//     position: 'absolute',
+//     bottom: 20,
+//     alignSelf: 'center',
+//     width: '90%',
+//     height: 46,
+//     borderRadius: 40,
+//     backgroundColor: '#537BFF',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     // paddingHorizontal 제거
+//   },
+//   buttonText: {
+//     color: '#fff',
+//     fontSize: 16,
+//     fontWeight: '600',
+//   },
+// });
 const styles = StyleSheet.create({
-  container: {
+ container: {
     flex: 1,
-    alignItems: 'center',
+    paddingHorizontal: wp("5%"),
+    paddingTop: hp("2%"),
+    justifyContent: "space-between",
+    paddingBottom: hp("2%"),
   },
   header: {
-    position: 'absolute',
-    top: 50,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: hp("5%"),
+    justifyContent: "space-between",
   },
-
-  backButton: {
-    position: 'absolute', // 왼쪽에 고정
-    left: 20,
+  content: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: hp("5%"),
+    // // paddingBottom: hp("5%"), // 이미지와 겹치지 않도록 여유 공간 추가
   },
-
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#111111',
+    fontSize: wp("4.5%"),
+    fontWeight: "600",
   },
   subTitle: {
-    fontSize: 18,
+    textAlign: 'center',
+    fontSize: wp("5%"),   // 18px → 화면 폭 기준
     color: '#537BFF',
-    marginTop: 100,
-  },
-  code: {
-    fontWeight: '600',
+    fontWeight: "600",
+    //paddingTop: hp("1%"), // 100px → 화면 높이 기준
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#111111',
-    marginTop: 8,
+    textAlign: 'center',
+    fontSize: wp("6%"),   // 22px → 화면 폭 기준
+    fontWeight: "600",
+    color: '#111',
+    marginTop: hp("1%"), // 8px → 화면 높이 기준
   },
   infoBoxOverlay: {
     position: 'absolute',
-    bottom: 90, // 이미지 아래쪽에서 50 정도 위로 올리기
+    bottom: hp("12%"),    // 90px → 화면 높이 기준
     alignItems: 'center',
   },
   image: {
-    width: '90%',   // 화면 폭의 90%
-    height: 500,
-    aspectRatio: 1, // 정사각 비율 유지
-    bottom: '10%',
-  },
-
-  infoBox: {
-    alignItems: 'center',
+    height: hp("60%"),    // 500px → 화면 높이 기준
+    aspectRatio: 1,
+    padding: hp("10%"),
   },
   infoText: {
-    fontSize: 20,
+    fontSize: wp("5%"),   // 20px → 화면 폭 기준
     fontWeight: '600',
+    alignSelf: 'flex-start',
     color: '#111111',
+    //paddingBottom: hp("1%"), // 8px → 화면 높이 기준
+    paddingTop: hp("1%"), // 8px → 화면 높이 기준
   },
   highlight: {
     color: '#537BFF',
   },
   subInfo: {
-    marginTop: 6,
-    fontSize: 16,
-    color: '#111111',
-    opacity: 0.7,
+    marginTop: hp("1%"),  // 6px → 화면 높이 기준
+    fontSize: wp("4.5%"),   // 16px → 화면 폭 기준
+    color: '#343434',
+    opacity: 0.67,
   },
   button: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-    width: '90%',
-    height: 46,
-    borderRadius: 40,
-    backgroundColor: '#537BFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // paddingHorizontal 제거
+    backgroundColor: "#537BFF",
+    borderRadius: wp("5%"),
+    paddingVertical: hp("1.5%"),
+    alignItems: "center",
+    marginBottom: hp("7%"),
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: "#fff",
+    fontSize: wp("4.5%"),
+    fontWeight: "600",
   },
 });
