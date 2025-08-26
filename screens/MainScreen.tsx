@@ -3,9 +3,10 @@ import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import Frame1707482143 from "./src/Frame1707482143";
 import MapCard from "./src/Frame1707482142";
 import Ellipse from "./src/ellipse-11.svg";
-import Frame1707482406 from "./src/Frame1707482406";
 import Dots from "./src/dots.svg";
 import { LinearGradient } from "expo-linear-gradient";
+import Icon from "./src/bbosong.svg";
+import FloatingButton from "../components/FloatingButton";
 
 const MainScreen = ({ navigation }: any) => {
   return (
@@ -20,6 +21,7 @@ const MainScreen = ({ navigation }: any) => {
         gap: 8,
       }}
     >
+      <FloatingButton />
       <View
         style={{
           flex: 2,
@@ -27,17 +29,13 @@ const MainScreen = ({ navigation }: any) => {
           justifyContent: "center",
         }}
       >
-        <Image
-          source={require("./src/bbosong.png")}
-          style={{ width: 59, height: 31, marginTop: 20 }}
-        />
+        <Icon />
         <View style={{ margin: 10, elevation: 7, borderRadius: 19 }}>
           <View style={[styles.view, { backgroundColor: "white" }]}>
             <Text style={[{ color: "#999" }, styles.textTypo]}>오늘 날씨</Text>
             <Text style={[{ color: "#537bff" }, styles.textTypo]}>맑음</Text>
           </View>
         </View>
-        <Dots style={{ marginRight: 10 }} />
       </View>
       <View
         style={{
@@ -83,20 +81,21 @@ const MainScreen = ({ navigation }: any) => {
             </Text>
             <Text>리워드 내용</Text>
           </View>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#111",
-              paddingVertical: 8,
-              paddingHorizontal: 16,
-              borderRadius: 20,
-            }}
-            onPress={() => {
-              navigation.navigate("MyPage");
-            }}
-          >
-            <Text style={{ color: "#fff", fontWeight: "600" }}>내정보</Text>
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            backgroundColor: "#111",
+            paddingVertical: 8,
+            paddingHorizontal: 16,
+            borderRadius: 20,
+          }}
+          onPress={() => {
+            navigation.navigate("MyPage");
+          }}
+        >
+          <Text style={{ color: "#fff", fontWeight: "600" }}>내정보</Text>
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );

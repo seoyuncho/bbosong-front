@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Arrow from './src/arrow.svg';
 import axios from 'axios';
 import { UserGender, UserType } from './enums/UserType';
 
@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }: any) => {
   });
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const API_URL = 'http://10.122.145.143:3000';
+  const API_URL = 'http://192.168.3.96:3000';
 
   const handleNext = () => {
     setStep(step + 1);
@@ -37,7 +37,6 @@ const SignupScreen = ({ navigation }: any) => {
   };
 
   const handleComplete = async () => {
-    // 백엔드에 formData 전송 로직 구현
     console.log('회원가입 정보:', formData);
     try {
       const response = await axios.post(`${API_URL}/user/signup`, {
@@ -238,7 +237,7 @@ const SignupScreen = ({ navigation }: any) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
-          <Icon name="arrow-left" size={20} color="#000000" />
+          <Arrow width={24} height={24} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>회원가입</Text>
         {step <= 3 && <Text>{step}/3</Text>}

@@ -1,15 +1,6 @@
-import React from 'react';
-import { NaverMapMarkerOverlay } from '@mj-studio/react-native-naver-map';
-
-interface Marker {
-  id: string;
-  latitude: number;
-  longitude: number;
-  caption: string;
-  subCaption: string;
-  description: string;
-  image: { symbol: string };
-}
+import React, { useEffect, useState } from "react";
+import { NaverMapMarkerOverlay } from "@mj-studio/react-native-naver-map";
+import { Marker } from "../data/sampleMarkers";
 
 interface MapMarkersProps {
   markers: Marker[];
@@ -17,18 +8,29 @@ interface MapMarkersProps {
 }
 
 const MapMarkers: React.FC<MapMarkersProps> = ({ markers, onMarkerTap }) => {
+  console.log("Rendering MapMarkers")
   return (
     <>
-      {markers.map(marker => (
-        <NaverMapMarkerOverlay
-          key={marker.id}
-          latitude={marker.latitude}
-          longitude={marker.longitude}
-          onTap={() => onMarkerTap(marker)}
-          caption={{ text: marker.caption }}
-          subCaption={{ text: marker.subCaption }}
-          //image={marker.image}
-        />
+      {markers.map((marker) => (
+      <NaverMapMarkerOverlay
+        key={marker.id}
+        latitude={marker.latitude}
+        longitude={marker.longitude}
+        onTap={() => onMarkerTap(marker)}
+        caption={{ text: marker.caption }}
+        subCaption={{ text: marker.subCaption }}
+        image={
+        marker.description === "station"
+          ? require(`./src/station.png`)
+          : marker.description === "sponsor"
+          ? require(`./src/sponsor.png`)
+          : marker.description === "culture"
+          ? require(`./src/culture.png`)
+          : marker.description === "recommendation"
+          ? require(`./src/recommendation.png`)
+          : { symbol: "gray" }
+        }
+      />
       ))}
     </>
   );

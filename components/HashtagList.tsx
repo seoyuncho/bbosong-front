@@ -14,7 +14,7 @@ import Cafe from "./src/frame-1707482365.svg";
 import Rain from "./src/frame-1707482363.svg";
 import IconChange from "./src/x.svg";
 
-const API_URL = "http://10.122.144.49:3000";
+const API_URL = "http://192.168.45.96:3000";
 
 const hashtagComponents = [
   { tag: "#hot", Component: Hot },
@@ -34,7 +34,6 @@ const HashtagList = ({
   selectedTag,
   setSelectedTag,
 }: HashtagListProps) => {
-  // 해시태그 클릭 시 API 호출 및 데이터 전달
   const handleTagPress = async (tag: string) => {
     const tagToFetch = tag.startsWith("#") ? tag.substring(1) : tag;
 
@@ -63,7 +62,7 @@ const HashtagList = ({
         caption: store.name,
         subCaption: store.address ?? "",
         description: store.category ?? "",
-        image: { symbol: "red" },
+        image: { symbol: "blue" },
         store,
       }));
       console.log("Fetched stores:", newMarkers);
@@ -119,7 +118,7 @@ const HashtagList = ({
 const styles = StyleSheet.create({
   absoluteContainer: {
     position: "absolute",
-    top: 90,
+    top: 94,
     left: 0,
     right: 0,
     zIndex: 10,

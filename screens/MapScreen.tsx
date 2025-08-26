@@ -3,43 +3,73 @@ import { View, ActivityIndicator, Text } from "react-native";
 import {
   NaverMapView,
   NaverMapViewRef,
-  NaverMapMarkerOverlay,
-  Camera,
 } from "@mj-studio/react-native-naver-map";
 import { useLocationPermission } from "../hooks/useLocationPermission";
-import BackgroundPermission from "../components/BackgroundPermission";
 import PlaceSearch from "../components/PlaceSearch";
 import PlaceDetail from "../components/PlaceDetail";
 import MapMarkers from "../components/MapMarkers";
-import { sampleMarkers, Marker } from "../data/sampleMarkers";
+import { Marker } from "../data/sampleMarkers";
 import HashtagList from "../components/HashtagList";
+import axios from "axios";
+
+const API_URL = "http://192.168.45.96:3000";
 
 const MapScreen = (): React.JSX.Element => {
   const { hasPermission } = useLocationPermission();
   const mapRef = useRef<NaverMapViewRef>(null);
-  const [markers, setMarkers] = useState<Marker[]>([]);
+  const [allMarkers, setAllMarkers] = useState<Marker[]>([]); // 전체 마커 원본
+  const [markers, setMarkers] = useState<Marker[]>([]); // 현재 지도에 표시할 마커
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Marker | null>(null);
-  const [stores, setStores] = useState<any[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchMarkers = async () => {
-      setMarkers(sampleMarkers);
-    };
+  // 전체 마커 불러오기 (초기화/해제용)
+  const fetchAllMarkers = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/store/initialmap`);
+      const newMarkers = response.data.map((store: any) => ({
+        id: `store-${store.id}`,
+        latitude: parseFloat(store.latitude),
+        longitude: parseFloat(store.longitude),
+        caption: store.name,
+        subCaption: store.address ?? "",
+        description: store.category ?? "",
+        store,
+      }));
+      setAllMarkers(newMarkers);
+      setMarkers(newMarkers);
+    } catch (error) {
+      console.error("마커 불러오기 실패:", error);
+    }
+  };
 
+  useEffect(() => {
     if (hasPermission) {
-      fetchMarkers();
+      fetchAllMarkers();
     }
   }, [hasPermission]);
+
+  // 해시태그 마커 필터링
+  const handleHashtagFetched = (filtered: Marker[]) => {
+    if (filtered.length > 0) {
+      setMarkers(filtered);
+    } else {
+      setMarkers(allMarkers); // 해시태그 해제 시 전체 마커
+    }
+  };
+
+  // 검색 결과 마커만 표시
+  const handleSearchFetched = (searchMarkers: Marker[]) => {
+    if (searchMarkers.length > 0) {
+      setMarkers(searchMarkers);
+    } else {
+      setMarkers(allMarkers); // 검색 해제 시 전체 마커
+    }
+  };
 
   const handleMarkerTap = (place: Marker) => {
     setSelectedPlace(place);
     setIsModalVisible(true);
-  };
-
-  const handleStoresFetched = (fetchedStores: any[]) => {
-    setMarkers(fetchedStores);
   };
 
   if (hasPermission === null) {
@@ -74,9 +104,9 @@ const MapScreen = (): React.JSX.Element => {
       >
         <MapMarkers markers={markers} onMarkerTap={handleMarkerTap} />
       </NaverMapView>
-      <PlaceSearch mapRef={mapRef} />
+      <PlaceSearch mapRef={mapRef} onStoresFetched={handleSearchFetched} />
       <HashtagList
-        onStoresFetched={handleStoresFetched}
+        onStoresFetched={handleHashtagFetched}
         selectedTag={selectedTag}
         setSelectedTag={setSelectedTag}
       />

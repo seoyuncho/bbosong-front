@@ -1,24 +1,40 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
-import axios from 'axios';
-import { NaverMapMarkerOverlay } from '@mj-studio/react-native-naver-map';
+import React, { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
+import axios from "axios";
+import { NaverMapMarkerOverlay } from "@mj-studio/react-native-naver-map";
+import Arrow from "./src/arrow.svg";
+import { useNavigation } from "@react-navigation/native";
 
 // 백엔드 API URL
-const API_URL = 'http://10.122.144.49:3000';
+const API_URL = "http://192.168.45.96:3000";
 
+import { Marker } from "../data/sampleMarkers";
 type PlaceSearchProps = {
   mapRef: any;
+  onStoresFetched: (markers: Marker[]) => void;
 };
 
-const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
-  const [query, setQuery] = useState('');
+const PlaceSearch = ({
+  mapRef,
+  onStoresFetched,
+}: PlaceSearchProps): React.JSX.Element => {
+  const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchMarker, setSearchMarker] = useState<any>(null);
-  
+  const navigation = useNavigation<any>();
+
   // 네이버 오픈 API를 호출하는 함수
   const handleSearch = async () => {
     if (!query) {
       setSearchResults([]);
+      onStoresFetched([]); // 검색어 없으면 전체 마커로 복구
       return;
     }
     try {
@@ -26,18 +42,42 @@ const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
         placeName: query,
       });
       setSearchResults(response.data.places);
+
+      // 검색 결과를 markers로 가공해서 지도에 표시
+      if (response.data.places && response.data.places.length > 0) {
+        const markers: Marker[] = response.data.places.map(
+          (place: any, idx: number) => {
+            const cleanedTitle = place.title.replace(/<[^>]*>/g, "");
+            const latitude = place.mapy / 1e7;
+            const longitude = place.mapx / 1e7;
+            return {
+              id: `search-result-${idx}`,
+              latitude,
+              longitude,
+              caption: cleanedTitle,
+              subCaption: place.address || "",
+              description: "",
+              image: undefined,
+              store: undefined,
+            };
+          }
+        );
+        onStoresFetched(markers);
+      } else {
+        onStoresFetched([]); // 검색 결과 없으면 전체 마커로 복구
+      }
     } catch (error) {
-      console.error('Error searching for place:', error);
+      console.error("Error searching for place:", error);
+      onStoresFetched([]); // 에러 시 전체 마커로 복구
     }
   };
 
   // 검색 결과 아이템을 선택했을 때 실행되는 함수
-  const handlePlaceSelection = (place: any) => {
-    const cleanedTitle = place.title.replace(/<[^>]*>/g, '');
+  const handlePlaceSelection = (place: any, idx: number) => {
+    const cleanedTitle = place.title.replace(/<[^>]*>/g, "");
     setQuery(cleanedTitle); // 검색창에 선택한 장소명 표시
     setSearchResults([]); // 검색 결과 목록 숨기기
 
-    // 지도 이동
     if (place && place.mapy && place.mapx) {
       const latitude = place.mapy / 1e7;
       const longitude = place.mapx / 1e7;
@@ -46,29 +86,34 @@ const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
         longitude,
         zoom: 20,
         duration: 1000,
-        easing: 'EaseOut',
+        easing: "EaseOut",
       });
 
-      // 임시 마커 생성
-      setSearchMarker({
-        id: 'search-result',
-        latitude,
-        longitude,
-        caption: cleanedTitle,
-        subCaption: place.address || '',
-      });
-
-      // 10초 후 임시 마커 제거
-      setTimeout(() => {
-        setSearchMarker(null);
-      }, 10000);
+      // 선택한 장소만 markers로 표시
+      onStoresFetched([
+        {
+          id: `search-result-${idx}`,
+          latitude,
+          longitude,
+          caption: cleanedTitle,
+          subCaption: place.address || "",
+          description: "",
+          image: { symbol: "red" },
+          store: undefined,
+        },
+      ]);
     }
   };
 
   // FlatList 렌더링 함수
-  const renderItem = ({ item }: { item: any }) => (
-    <TouchableOpacity onPress={() => handlePlaceSelection(item)} style={styles.resultItem}>
-      <Text style={styles.resultTitle}>{item.title.replace(/<[^>]*>/g, '')}</Text>
+  const renderItem = ({ item, index }: { item: any; index: number }) => (
+    <TouchableOpacity
+      onPress={() => handlePlaceSelection(item, index)}
+      style={styles.resultItem}
+    >
+      <Text style={styles.resultTitle}>
+        {item.title.replace(/<[^>]*>/g, "")}
+      </Text>
       <Text style={styles.resultAddress}>{item.address}</Text>
     </TouchableOpacity>
   );
@@ -76,6 +121,21 @@ const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
   return (
     <View style={styles.searchComponentContainer}>
       <View style={styles.searchContainer}>
+        <TouchableOpacity
+          style={{ margin: 4, backgroundColor: "white", borderRadius: 50 }}
+          onPress={() => {
+            navigation.navigate("");
+          }}
+        >
+          <Arrow
+            width={40}
+            height={40}
+            style={{ width: "100%", marginLeft: 4 }}
+            onPress={() => {
+              navigation.navigate("Main");
+            }}
+          />
+        </TouchableOpacity>
         <TextInput
           style={styles.searchInput}
           placeholder="지역명, 가게명 검색"
@@ -107,7 +167,7 @@ const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
           longitude={searchMarker.longitude}
           caption={{ text: searchMarker.caption }}
           subCaption={{ text: searchMarker.subCaption }}
-          image={{ symbol: 'red' }}
+          image={{ symbol: "red" }}
         />
       )}
     </View>
@@ -116,7 +176,7 @@ const PlaceSearch = ({ mapRef }: PlaceSearchProps): React.JSX.Element => {
 
 const styles = StyleSheet.create({
   searchComponentContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     left: 0,
     right: 0,
@@ -124,40 +184,41 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   searchContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    backgroundColor: "white",
     borderRadius: 40,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    color: "#999999",
   },
   searchInput: {
     flex: 1,
     padding: 12,
-    textAlign: 'center'
+    textAlign: "center",
   },
   searchButton: {
     padding: 12,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderLeftWidth: 1,
-    borderColor: '#eee',
+    borderColor: "#eee",
   },
   searchButtonText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   resultsListContainer: {
     marginTop: 10,
     maxHeight: 200,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   resultsList: {
     // FlatList 내부 스타일
@@ -165,13 +226,13 @@ const styles = StyleSheet.create({
   resultItem: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   resultTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   resultAddress: {
-    color: '#666',
+    color: "#666",
   },
 });
 
