@@ -14,7 +14,7 @@ import Cafe from "./src/frame-1707482365.svg";
 import Rain from "./src/frame-1707482363.svg";
 import IconChange from "./src/x.svg";
 
-const API_URL = "http://192.168.45.96:3000";
+const API_URL = "http://10.84.59.115:3000";
 
 const hashtagComponents = [
   { tag: "#hot", Component: Hot },

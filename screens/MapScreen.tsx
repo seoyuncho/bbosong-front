@@ -12,7 +12,7 @@ import { Marker } from "../data/sampleMarkers";
 import HashtagList from "../components/HashtagList";
 import axios from "axios";
 
-const API_URL = "http://192.168.45.96:3000";
+const API_URL = "http://10.84.59.115:3000";
 
 const MapScreen = (): React.JSX.Element => {
   const { hasPermission } = useLocationPermission();
@@ -26,6 +26,9 @@ const MapScreen = (): React.JSX.Element => {
   // 전체 마커 불러오기 (초기화/해제용)
   const fetchAllMarkers = async () => {
     try {
+      console.log("전체 마커를 불러오는 중...");
+      console.log(`${API_URL}/store/initialmap`);
+
       const response = await axios.get(`${API_URL}/store/initialmap`);
       const newMarkers = response.data.map((store: any) => ({
         id: `store-${store.id}`,

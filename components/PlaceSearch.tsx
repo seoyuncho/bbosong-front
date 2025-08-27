@@ -13,7 +13,7 @@ import Arrow from "./src/arrow.svg";
 import { useNavigation } from "@react-navigation/native";
 
 // 백엔드 API URL
-const API_URL = "http://192.168.45.96:3000";
+const API_URL = "http://10.84.59.115:3000";
 
 import { Marker } from "../data/sampleMarkers";
 type PlaceSearchProps = {

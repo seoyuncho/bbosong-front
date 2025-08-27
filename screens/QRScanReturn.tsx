@@ -158,7 +158,7 @@ export default function QRScanReturn() {
 
       console.log("QR payload:", payload);
 
-      const response = await axios.post(" http://10.254.205.115:3000/qr-scan/scan", payload);
+      const response = await axios.post(" http://10.84.59.115:3000/qr-scan/scan", payload);
       console.log("response.data:", response.data);
 
       // 메시지 처리

@@ -19,7 +19,7 @@ export default function QRBorrowCommit() {
         const umbrellaId = await AsyncStorage.getItem('umbrella_id');
         if (!umbrellaId) return;
 
-        const response = await axios.get(`http://10.254.205.115:3000/qr-scan/umbrella/${umbrellaId}`);
+        const response = await axios.get(`http://10.84.59.115:3000/qr-scan/umbrella/12`);
         console.log("borrow response:", response.data);
         const umbrella = response.data.umbrella;
         setStationName(umbrella.station.name);

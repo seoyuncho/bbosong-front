@@ -50,7 +50,7 @@ export default function QRScanBorrow() {
 
       console.log("QR payload:", payload);
 
-      const response = await axios.post(" http://10.254.205.115:3000/qr-scan/scan", payload);
+      const response = await axios.post("http://10.84.59.115:3000/qr-scan/scan", payload);
       console.log("response.data:", response.data);
 
       if (action === "borrow" && response.data.umbrella?.id) {

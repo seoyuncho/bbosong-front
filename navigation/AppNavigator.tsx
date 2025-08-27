@@ -11,6 +11,8 @@ import QRScanReturn from '../screens/QRScanReturn';
 import QRReturnCommit from '../screens/QRReturnCommit';
 import QRReturnComplete from '../screens/QRReturnComplete';
 import QRReturnReward from '../screens/QRReturnReward'
+import RewardCommit from '../screens/RewardCommit';
+import RewardComplete from '../screens/RewardComplete';
 import MyPageScreen from '../screens/MyPageScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import FindPasswordScreen from '../screens/FindPasswordScreen';
@@ -22,7 +24,7 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator initialRouteName="BorrowInfo" screenOptions={{ headerShown: false }}> 
+    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}> 
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
@@ -37,7 +39,9 @@ export default function AppNavigator() {
       <Stack.Screen name="QRScanReturn" component={QRScanReturn} />
       <Stack.Screen name="QRReturnCommit" component={QRReturnCommit} />
       <Stack.Screen name="QRReturnComplete" component={QRReturnComplete} />
+      <Stack.Screen name="RewardCommit" component={RewardCommit} />
       <Stack.Screen name="QRReturnReward" component={QRReturnReward} />
+      <Stack.Screen name="RewardComplete" component={RewardComplete} />
       <Stack.Screen name="BorrowInfo" component={BorrowInfo} />
       <Stack.Screen name="Extension" component={Extension} />
     </Stack.Navigator>
