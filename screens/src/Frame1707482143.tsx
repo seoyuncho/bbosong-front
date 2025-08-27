@@ -33,8 +33,8 @@ const Frame1707482143 = () => {
 
 const styles = StyleSheet.create({
   imageBg: {
-    resizeMode: "cover",
-    borderRadius: 20,
+    resizeMode: "stretch",
+    borderRadius: 33,
   },
   qrTypo: {
     textAlign: "left",
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     height: 28,
   },
   frameParent: {
+    aspectRatio: 16 / 10,
     justifyContent: "space-between",
     paddingHorizontal: 14,
     padding: 28,

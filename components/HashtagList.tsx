@@ -13,8 +13,9 @@ import Cool from "./src/frame-1707482362.svg";
 import Cafe from "./src/frame-1707482365.svg";
 import Rain from "./src/frame-1707482363.svg";
 import IconChange from "./src/x.svg";
+import Instruction from "./src/instruction.svg";
 
-const API_URL = "http://192.168.45.96:3000";
+const API_URL = "http://192.168.0.96:3000";
 
 const hashtagComponents = [
   { tag: "#hot", Component: Hot },
@@ -111,6 +112,7 @@ const HashtagList = ({
               );
             })()}
       </ScrollView>
+      <Instruction style={{ position: "absolute", top: 30 }} />
     </View>
   );
 };
@@ -118,12 +120,17 @@ const HashtagList = ({
 const styles = StyleSheet.create({
   absoluteContainer: {
     position: "absolute",
-    top: 94,
+    top: 100,
     left: 0,
     right: 0,
     zIndex: 10,
     backgroundColor: "transparent",
     paddingHorizontal: 0,
+    elevation: 5, // Android 그림자
+    shadowColor: "#000", // iOS 그림자
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3.84,
   },
   container: {
     backgroundColor: "transparent",
