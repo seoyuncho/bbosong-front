@@ -18,10 +18,10 @@ const MapMarkers: React.FC<MapMarkersProps> = ({ markers, onMarkerTap }) => {
         longitude={marker.longitude}
         onTap={() => onMarkerTap(marker)}
         caption={{ text: marker.caption }}
-        subCaption={{ text: marker.subCaption }}
+        subCaption={{ text: marker.subCaption }}  
         image={
         marker.description === "station"
-          ? require(`./src/station.png`)
+          ? require(`./src/station100.png`)
           : marker.description === "sponsor"
           ? require(`./src/sponsor.png`)
           : marker.description === "culture"

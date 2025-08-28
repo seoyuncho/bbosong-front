@@ -1,12 +1,13 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import Frame1707482143 from "./src/Frame1707482143";
-import MapCard from "./src/Frame1707482142";
+import MapCard from "./src/MapCard";
 import Ellipse from "./src/ellipse-11.svg";
 import Dots from "./src/dots.svg";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "./src/bbosong.svg";
 import FloatingButton from "../components/FloatingButton";
+import Reward from "./src/reward.svg";
 
 const MainScreen = ({ navigation }: any) => {
   return (
@@ -29,8 +30,8 @@ const MainScreen = ({ navigation }: any) => {
           justifyContent: "center",
         }}
       >
-        <Icon />
-        <View style={{ margin: 10, elevation: 7, borderRadius: 19 }}>
+        <Icon style={{ marginTop: 40 }} />
+        <View style={{ marginTop: 20, elevation: 7, borderRadius: 19 }}>
           <View style={[styles.view, { backgroundColor: "white" }]}>
             <Text style={[{ color: "#999" }, styles.textTypo]}>오늘 날씨</Text>
             <Text style={[{ color: "#537bff" }, styles.textTypo]}>맑음</Text>
@@ -46,9 +47,10 @@ const MainScreen = ({ navigation }: any) => {
           padding: 4,
           elevation: 7,
           gap: 0,
+          overflow: "hidden",
         }}
       >
-        <View style={{ flex: 1, justifyContent: "space-between" }}>
+        <View style={{ flex: 1, justifyContent: "flex-end" }}>
           <Frame1707482143 />
           <MapCard />
         </View>
@@ -57,44 +59,55 @@ const MainScreen = ({ navigation }: any) => {
         style={{
           width: "100%",
           flex: 2,
-          alignItems: "center",
-          justifyContent: "center",
           elevation: 7,
           borderRadius: 33,
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          paddingVertical: 10,
+          backgroundColor: "#EBEDF5",
+          paddingVertical: 18,
           paddingHorizontal: 20,
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
         <View
           style={{
             flexDirection: "row",
-            alignItems: "center",
-            gap: 30,
-            backgroundColor: "rgba(255, 255, 255, 0)",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            marginBottom: 10,
+            width: "100%",
           }}
         >
+          <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
           <Ellipse width={64} height={64} />
-          <View style={{ padding: 8 }}>
+          <View style={{ padding: 10, marginLeft: 4 }}>
             <Text style={{ fontSize: 16, fontWeight: "600", color: "#537BFF" }}>
-              김뽀송
+              김뽀송<Text style={{ fontSize: 16, fontWeight: "600", color: "#000000" }}> 님</Text>
             </Text>
             <Text>리워드 내용</Text>
+          </View>
+          </View>
+          <View>
+            <TouchableOpacity style={{ borderRadius: 20, backgroundColor: "#FFFFFF"}}>
+              <Reward />
+            </TouchableOpacity>
           </View>
         </View>
         <TouchableOpacity
           style={{
             width: "100%",
             backgroundColor: "#111",
-            paddingVertical: 8,
-            paddingHorizontal: 16,
-            borderRadius: 20,
+            paddingVertical: 15,
+            borderRadius: 50,
           }}
           onPress={() => {
             navigation.navigate("MyPage");
           }}
         >
-          <Text style={{ color: "#fff", fontWeight: "600" }}>내정보</Text>
+          <Text
+            style={{ color: "#fff", fontWeight: "600", textAlign: "center" }}
+          >
+            내정보
+          </Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>

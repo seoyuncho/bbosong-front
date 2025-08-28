@@ -40,7 +40,7 @@ const FloatingButton = () => {
         // 클릭 vs 드래그 구분 (거의 안 움직였으면 클릭으로 판단)
         if (Math.abs(gesture.dx) < 5 && Math.abs(gesture.dy) < 5) {
           console.log("버튼 클릭됨!");
-          // 👉 여기서 navigation.navigate("MyPage") 같은 로직 실행 가능
+          navigation.navigate("BorrowInfo")
         }
         pan.extractOffset();
       },
