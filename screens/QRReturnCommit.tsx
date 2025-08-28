@@ -99,10 +99,10 @@ export default function QRReturnCommit() {
             사용한 시간: <Text style={styles.highlight}>{usedTime}</Text>
             </Text>
             <Text style={styles.infoText}>
-            반납시간: {returnTimeText}
+            반납 시간: {returnTimeText}
             </Text>
             <Text style={styles.subInfo}>
-            반납시간까지 {remainingTime}
+            반납 시간까지 {remainingTime} 남음
             </Text>
         </View>
       </View>
