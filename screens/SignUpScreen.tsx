@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }: any) => {
   });
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const API_URL = 'http://192.168.0.92:3000';
+  const API_URL = 'http://192.168.0.96:3000';
 
   const handleNext = () => {
     setStep(step + 1);
@@ -215,7 +215,10 @@ const SignupScreen = ({ navigation }: any) => {
     <View style={styles.completeContainer}>
       <Text style={styles.completeTitle}>회원가입이 완료되었습니다!</Text>
       <Text style={styles.completeText}>
-        홈으로 이동하여 로그인하세요.
+        15분 내에 이메일 인증을 완료하면
+      </Text>
+      <Text style={styles.completeText}>
+        홈에서 로그인할 수 있어요.
       </Text>
       <TouchableOpacity style={styles.nextButton} onPress={() => console.log('홈으로 이동')}>
       </TouchableOpacity>

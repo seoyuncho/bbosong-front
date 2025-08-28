@@ -9,7 +9,7 @@ const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const API_URL = 'http://192.168.0.92:3000';
+  const API_URL = 'http://192.168.0.96:3000';
 
   const handleLogin = async () => {
     try {
@@ -65,6 +65,7 @@ const LoginScreen = ({ navigation }: any) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
+          
           console.log('로그인 버튼 클릭됨');
           handleLogin();
           navigation.navigate('Main');

@@ -58,7 +58,7 @@ const BorrowInfo = ({ navigation }: any) => {
 
         <View
           style={{
-            width: "90%",
+            width: "80%",
             alignItems: "center",
             flex: 1,
             justifyContent: "center",
@@ -74,7 +74,7 @@ const BorrowInfo = ({ navigation }: any) => {
               사용한 시간: <Text style={styles.highlight}>21시간 35분</Text>
             </Text>
             <Text style={styles.infoText}>
-              반납 시간 시간:{" "}
+              반납 시간:{" "}
               <Text style={styles.highlight}>오늘 오전 9시 41분까지</Text>
             </Text>
             <Text style={styles.subInfo}>
@@ -85,7 +85,7 @@ const BorrowInfo = ({ navigation }: any) => {
       </View>
 
       <TouchableOpacity
-        style={styles.button}
+        style={styles.button1}
         onPress={() => navigation.navigate("Extension")}
       >
         <Text style={styles.buttonText}>반납하기</Text>
@@ -117,12 +117,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   backButton: {
     position: "absolute",
     left: 20,
   },
-
   headerTitle: {
     fontSize: 20,
     fontWeight: "bold",
@@ -171,6 +169,17 @@ const styles = StyleSheet.create({
     color: "#111111",
     opacity: 0.7,
     textAlign: "center",
+  },
+  button1: {
+    position: "absolute",
+    bottom: 70,
+    alignSelf: "center",
+    width: "90%",
+    height: 46,
+    borderRadius: 40,
+    backgroundColor: "#000000",
+    justifyContent: "center",
+    alignItems: "center",
   },
   button: {
     position: "absolute",

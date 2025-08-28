@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text, StyleSheet, View, Image } from "react-native";
-import Frame1707482142 from "./Frame1707482142";
+import Frame1707482142 from "./MapCard";
 import Frame1707482143 from "./Frame1707482143";
 import Frame1707482406 from "./Frame1707482406";
 
@@ -9,10 +9,7 @@ const Frame1707482407 = () => {
     <View style={styles.container}>
       {/* 로고와 오늘 날씨 */}
       <View style={styles.logoWeather}>
-        <Image
-          source={require("./bbosong.png")}
-          style={styles.logo}
-        />
+        <Image source={require("./bbosong.png")} style={styles.logo} />
         <Text style={styles.weather}>오늘 날씨: 맑음</Text>
       </View>
       {/* QR찍기 */}

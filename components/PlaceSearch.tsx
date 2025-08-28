@@ -11,9 +11,10 @@ import axios from "axios";
 import { NaverMapMarkerOverlay } from "@mj-studio/react-native-naver-map";
 import Arrow from "./src/arrow.svg";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 // 백엔드 API URL
-const API_URL = "http://10.84.59.115:3000";
+const API_URL = "http://192.168.0.96:3000";
 
 import { Marker } from "../data/sampleMarkers";
 type PlaceSearchProps = {
@@ -122,19 +123,18 @@ const PlaceSearch = ({
     <View style={styles.searchComponentContainer}>
       <View style={styles.searchContainer}>
         <TouchableOpacity
-          style={{ margin: 4, backgroundColor: "white", borderRadius: 50 }}
-          onPress={() => {
-            navigation.navigate("");
+          style={{
+            width: 40,
+            height: 40,
+            margin: 4,
+            backgroundColor: "white",
+            borderRadius: 50,
+            alignItems: "center",
+            justifyContent: "center",
           }}
+          onPress={() => navigation.navigate("Main")}
         >
-          <Arrow
-            width={40}
-            height={40}
-            style={{ width: "100%", marginLeft: 4 }}
-            onPress={() => {
-              navigation.navigate("Main");
-            }}
-          />
+          <Ionicons name="arrow-back" size={24} color="#000" />
         </TouchableOpacity>
         <TextInput
           style={styles.searchInput}
@@ -142,6 +142,7 @@ const PlaceSearch = ({
           value={query}
           onChangeText={setQuery}
           onSubmitEditing={handleSearch}
+
         />
         <TouchableOpacity onPress={handleSearch} style={styles.searchButton}>
           <Text style={styles.searchButtonText}>검색</Text>
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flexDirection: "row",
-    backgroundColor: "white",
+    backgroundColor: "#F8F8F9",
     borderRadius: 40,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     color: "#999999",
+    alignContent: "center",
   },
   searchInput: {
     flex: 1,
@@ -209,8 +211,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   resultsListContainer: {
-    marginTop: 10,
-    maxHeight: 200,
+    marginTop: 45,
+    maxHeight: 400,
     backgroundColor: "white",
     borderRadius: 8,
     shadowColor: "#000",
