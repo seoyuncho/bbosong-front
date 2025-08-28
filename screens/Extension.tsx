@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Bubble from "./src/bubble.svg";
+import Question from "./src/question.svg";
 
 const Extension = ({ navigation }: any) => {
   return (
@@ -22,21 +23,49 @@ const Extension = ({ navigation }: any) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>대여 연장</Text>
       </View>
-      <View style={{ flex: 1, width: "100%", paddingTop: 90 }}>
-        <Text style={styles.title}>연장을 위해</Text>
-        <Text style={styles.title}>비눗방울을 사용할 수 있어요.</Text>
-        <View style={styles.bubbles}>
-          <Text>보유 중인 비눗방울</Text>
-          <Text>비눗방울 3개로 1일(24시간) 연장할 수 있어요.</Text>
+      <View style={{ flex: 1, width: "100%", paddingTop: 90, gap: 8 }}>
+        <View style={{ padding: 20, paddingVertical: 30 }}>
+          <Text style={styles.title}>연장을 위해</Text>
+          <Text style={styles.title}>비눗방울을 사용할 수 있어요.</Text>
         </View>
         <View style={styles.bubbles}>
-          <Text>대여 연장 전</Text>
-          <Text>반납 시간: 2025.08.18. 오전 9:41</Text>
-          <Text>대여 연장 후</Text>
-          <Text>반납 시간: 2025.08.19. 오전 9:41</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, padding: 5 }}>
+              보유 중 비눗방울
+            </Text>
+            <Bubble />
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "#537BFF" }}>6개</Text>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4, padding: 5 }}>
+            <Question />
+            <Text style={{ fontSize: 12, color: "#999999" }}>
+              비눗방울 3개로 1일(24시간) 연장할 수 있어요.
+            </Text>
+          </View>
         </View>
         <View style={styles.bubbles}>
-          <Text>연장 후 비눗방울</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 16, padding: 5 }}>
+            대여 연장 전
+          </Text>
+          <Text style={{ fontSize: 12, color: "#999999", padding: 5 }}>
+            반납 시간: 2025.08.18. 오전 9:41
+          </Text>
+          <View style={{ height: 1, backgroundColor: "#eee", marginVertical: 16, width: "100%" }} />
+          <Text style={{ fontWeight: "bold", fontSize: 16, padding: 5 }}>
+            대여 연장 후
+          </Text>
+          <Text style={{ fontSize: 12, color: "#999999", padding: 5 }}>
+            반납 시간: 2025.08.19. 오전 9:41
+          </Text>
+        </View>
+        <View style={styles.bubbles}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, padding: 5 }}>
+              연장 후 비눗방울
+            </Text>
+            <Bubble />
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "#537BFF" }}>3개</Text>
+          </View>
         </View>
       </View>
 
@@ -55,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     flexDirection: "column",
-    padding: 20,
+    padding: 8,
   },
   header: {
     position: "absolute",
@@ -120,7 +149,7 @@ const styles = StyleSheet.create({
   bubbles: {
     backgroundColor: "white",
     borderRadius: 30,
-    padding: 24,
+    padding: 20,
   },
   button: {
     position: "absolute",
