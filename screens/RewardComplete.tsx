@@ -50,7 +50,10 @@ export default function RewardComplete() {
       </View>
 
       {/* Confirm button */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={()=>navigation.navigate("Main" as never)}
+        >
         <Text style={styles.buttonText}>확인</Text>
       </TouchableOpacity>
     </View>

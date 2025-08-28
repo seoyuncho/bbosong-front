@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }: any) => {
   });
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const API_URL = 'http://10.84.59.115:3000';
+  const API_URL = 'http://192.168.0.92:3000';
 
   const handleNext = () => {
     setStep(step + 1);

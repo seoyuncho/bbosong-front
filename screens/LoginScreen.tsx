@@ -4,11 +4,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { saveToken } from '../services/authService';
 import axios from 'axios';
 
+
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const API_URL = 'http://10.84.59.115:3000';
+  const API_URL = 'http://192.168.0.92:3000';
 
   const handleLogin = async () => {
     try {
@@ -64,9 +65,9 @@ const LoginScreen = ({ navigation }: any) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          navigation.navigate('Main');
-          //handleLogin();
           console.log('로그인 버튼 클릭됨');
+          handleLogin();
+          navigation.navigate('Main');
         }}
       >
         <Text style={styles.buttonText}>로그인</Text>

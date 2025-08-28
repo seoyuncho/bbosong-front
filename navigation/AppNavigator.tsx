@@ -3,16 +3,21 @@ import LoginScreen from '../screens/LoginScreen';
 import MainScreen from '../screens/MainScreen';
 import MapScreen from '../screens/MapScreen';
 import QRScreen from '../screens/QRScreen';
+
 import QRScanBorrow from '../screens/QRScanBorrow';
 import QRBorrowCommit from '../screens/QRBorrowCommit';
 import QRBorrowComplete from '../screens/QRBorrowComplete';
 import QRBorrowRecommend from '../screens/QRBorrowRecommend';
+
 import QRScanReturn from '../screens/QRScanReturn';
 import QRReturnCommit from '../screens/QRReturnCommit';
 import QRReturnComplete from '../screens/QRReturnComplete';
-import QRReturnReward from '../screens/QRReturnReward'
+import QRReturnReward from '../screens/QRReturnReward';
+
+import QRScanReward from '../screens/QRScanReward';
 import RewardCommit from '../screens/RewardCommit';
 import RewardComplete from '../screens/RewardComplete';
+
 import MyPageScreen from '../screens/MyPageScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import FindPasswordScreen from '../screens/FindPasswordScreen';
@@ -36,12 +41,16 @@ export default function AppNavigator() {
       <Stack.Screen name="QRBorrowCommit" component={QRBorrowCommit} />
       <Stack.Screen name="QRBorrowComplete" component={QRBorrowComplete} />
       <Stack.Screen name="QRBorrowRecommend" component={QRBorrowRecommend} />
+
       <Stack.Screen name="QRScanReturn" component={QRScanReturn} />
       <Stack.Screen name="QRReturnCommit" component={QRReturnCommit} />
       <Stack.Screen name="QRReturnComplete" component={QRReturnComplete} />
-      <Stack.Screen name="RewardCommit" component={RewardCommit} />
       <Stack.Screen name="QRReturnReward" component={QRReturnReward} />
+
+      <Stack.Screen name="QRScanReward" component={QRScanReward} />
+      <Stack.Screen name="RewardCommit" component={RewardCommit} />
       <Stack.Screen name="RewardComplete" component={RewardComplete} />
+
       <Stack.Screen name="BorrowInfo" component={BorrowInfo} />
       <Stack.Screen name="Extension" component={Extension} />
     </Stack.Navigator>

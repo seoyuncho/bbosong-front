@@ -35,9 +35,9 @@ export default function QRScreen() {
 
         {/* 카드 영역 */}
         <TouchableOpacity style={styles.card} 
-            //onPress={() => navigation.navigate("QRScanBorrow" as never)}
-            //onPress={() => navigation.navigate("QRBorrowRecommend"  as never)}
-            onPress={()=>navigation.navigate("QRBorrowCommit" as never)}
+            // onPress={() => navigation.navigate("QRScanBorrow" as never)}
+            onPress={() => navigation.navigate("QRBorrowRecommend"  as never)}
+            // onPress={()=>navigation.navigate("QRBorrowCommit" as never)}
           >
             <View>
             <Text style={styles.cardTitle}><Text style={styles.blue}>뽀송이</Text> 대여</Text>
@@ -65,7 +65,7 @@ export default function QRScreen() {
 
         <TouchableOpacity 
           style={styles.card}
-          onPress={() => navigation.navigate("RewardComplete" as never)}
+          onPress={() => navigation.navigate("QRScanReward" as never)}
         >
             <View>
             <Text style={[styles.cardTitle, styles.blue]}>리워드 받기</Text>
@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   header: {
-    top: 30,
+    paddingTop: 25,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 12,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#000",
   },
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 3,
-    height: 120, // 카드 높이 고정
+    height: 130, // 카드 높이 고정
     overflow: "hidden", // 자식 요소가 카드 영역을 벗어나지 않도록
     },
   cardTitle: {
