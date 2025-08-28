@@ -25,7 +25,7 @@ const Frame1707482143 = () => {
         <Text style={[styles.text1, styles.qrTypo]}>우산을 대여/반납해요</Text>
       </View>
       <Group5 style={styles.frameItem} width={28} height={28} onPress={() => {
-        navigation.navigate('QR');
+        navigation.navigate('QRScreen');
       }} />
     </ImageBackground>
   );
