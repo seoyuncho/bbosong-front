@@ -22,7 +22,7 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator initialRouteName="BorrowInfo" screenOptions={{ headerShown: false }}> 
+    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}> 
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
