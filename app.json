@@ -31,63 +31,6 @@
       [
         "@mj-studio/react-native-naver-map",
         {
-            "expo-location": {
-            "isAndroidForegroundServiceEnabled": true,
-            "isAndroidBackgroundLocationEnabled": true
-          }
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "extraMavenRepos": ["https://repository.map.naver.com/archive/maven"]
-          }
-        }
-      ],
-      [
-        "expo-camera",
-            {
-              "cameraPermission": "접근 권한을 허용해주세요."
-            }
-      ]
-    ]
-  }
-}
-=======
-{
-  "expo": {
-    "name": "bbosong",
-    "slug": "bbosong",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.bbosong"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "@mj-studio/react-native-naver-map",
-        {
-          "client_id": "네이버클라이언트키",
           "client_id": "f5zgy1p61f",
           "expo-location": {
             "isAndroidForegroundServiceEnabled": true,

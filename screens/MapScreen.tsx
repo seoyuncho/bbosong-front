@@ -26,6 +26,9 @@ const MapScreen = (): React.JSX.Element => {
   // 전체 마커 불러오기 (초기화/해제용)
   const fetchAllMarkers = async () => {
     try {
+      console.log("전체 마커를 불러오는 중...");
+      console.log(`${API_URL}/store/initialmap`);
+
       const response = await axios.get(`${API_URL}/store/initialmap`);
       const newMarkers = response.data.map((store: any) => ({
         id: `store-${store.id}`,
