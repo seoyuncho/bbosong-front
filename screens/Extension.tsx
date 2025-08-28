@@ -26,12 +26,12 @@ const Extension = ({ navigation }: any) => {
       <View style={{ flex: 1, width: "100%", paddingTop: 90, gap: 8 }}>
         <View style={{ padding: 20, paddingVertical: 30 }}>
           <Text style={styles.title}>연장을 위해</Text>
-          <Text style={styles.title}>비눗방울을 사용할 수 있어요.</Text>
+          <Text style={styles.title}>방울이를 사용할 수 있어요.</Text>
         </View>
         <View style={styles.bubbles}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Text style={{ fontWeight: "bold", fontSize: 16, padding: 5 }}>
-              보유 중 비눗방울
+              보유 중 방울이
             </Text>
             <Bubble />
             <Text style={{ fontSize: 16, fontWeight: "bold", color: "#537BFF" }}>6개</Text>
@@ -39,7 +39,7 @@ const Extension = ({ navigation }: any) => {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 4, padding: 5 }}>
             <Question />
             <Text style={{ fontSize: 12, color: "#999999" }}>
-              비눗방울 3개로 1일(24시간) 연장할 수 있어요.
+              방울이 3개로 1일(24시간) 연장할 수 있어요.
             </Text>
           </View>
         </View>
@@ -61,7 +61,7 @@ const Extension = ({ navigation }: any) => {
         <View style={styles.bubbles}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Text style={{ fontWeight: "bold", fontSize: 16, padding: 5 }}>
-              연장 후 비눗방울
+              연장 후 방울이
             </Text>
             <Bubble />
             <Text style={{ fontSize: 16, fontWeight: "bold", color: "#537BFF" }}>3개</Text>

@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Text,
 } from "react-native";
+import { Animated } from "react-native";
 import Icon from "./src/frame-1707482364.svg";
-import Hot from "./src/frame-1707482361.svg";
-import Cool from "./src/frame-1707482362.svg";
-import Cafe from "./src/frame-1707482365.svg";
-import Rain from "./src/frame-1707482363.svg";
+import HotBg from "./src/HotBg.svg";
+import CoolBg from "./src/CoolBg.svg";
+import CafeBg from "./src/CafeBg.svg";
+import RainBg from "./src/RainBg.svg";
 import IconChange from "./src/x.svg";
 import Instruction from "./src/instruction.svg";
 
 const API_URL = "https://bbosong-back-production.up.railway.app";
 
+// 배경 + 텍스트/이모지 세트 정의
 const hashtagComponents = [
-  { tag: "#hot", Component: Hot },
-  { tag: "#cool", Component: Cool },
-  { tag: "#cafe", Component: Cafe },
-  { tag: "#rain", Component: Rain },
+  { tag: "#hot", label: "# 이열치열 🔥", Bg: HotBg },
+  { tag: "#cool", label: "# 풀냉방 ❄️", Bg: CoolBg },
+  { tag: "#cafe", label: "# 분좋카 ☕️", Bg: CafeBg },
+  { tag: "#rain", label: "# 비가 오는 날에... 🌧️", Bg: RainBg },
 ];
 
 interface HashtagListProps {
@@ -82,16 +84,33 @@ const HashtagList = ({
   };
 
   const [showInstruction, setShowInstruction] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
     if (showInstruction) {
-      const timer = setTimeout(() => setShowInstruction(false), 3000);
-      return () => clearTimeout(timer);
+      fadeAnim.setValue(1);
+      timer = setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }).start(() => setShowInstruction(false));
+      }, 3000);
     }
-  }, [showInstruction]);
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [showInstruction, fadeAnim]);
 
   const handleContainerPress = () => {
-    if (showInstruction) setShowInstruction(false);
+    if (showInstruction) {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => setShowInstruction(false));
+    }
   };
 
   return (
@@ -102,13 +121,19 @@ const HashtagList = ({
         style={styles.container}
         contentContainerStyle={{ paddingHorizontal: 20, gap: 4 }}
       >
+        {/* 리셋 버튼 */}
         <TouchableOpacity style={styles.iconWrapper} onPress={handleReset}>
           {selectedTag === null ? <Icon /> : <IconChange />}
         </TouchableOpacity>
+
+        {/* 해시태그 버튼들 */}
         {selectedTag === null
-          ? hashtagComponents.map(({ tag, Component }) => (
+          ? hashtagComponents.map(({ tag, label, Bg }) => (
               <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
-                <Component />
+                <View style={styles.tagWrapper}>
+                  <Bg height={35} />
+                  <Text style={styles.tagText}>{label}</Text>
+                </View>
               </TouchableOpacity>
             ))
           : (() => {
@@ -116,16 +141,25 @@ const HashtagList = ({
                 (h) => h.tag === selectedTag
               );
               if (!selected) return null;
-              const SelectedComponent = selected.Component;
+              const { label, Bg } = selected;
               return (
                 <TouchableOpacity onPress={() => setSelectedTag(null)}>
-                  <SelectedComponent />
+                  <View style={styles.tagWrapper}>
+                    <Bg style={{ height: 35 }} />
+                    <Text style={styles.tagText}>{label}</Text>
+                  </View>
                 </TouchableOpacity>
               );
             })()}
       </ScrollView>
+
+      {/* 사용법 안내 */}
       {showInstruction && (
-        <Instruction style={{ position: "absolute", top: 30 }} />
+        <Animated.View
+          style={{ position: "absolute", top: 30, opacity: fadeAnim }}
+        >
+          <Instruction />
+        </Animated.View>
       )}
     </View>
   );
@@ -134,43 +168,39 @@ const HashtagList = ({
 const styles = StyleSheet.create({
   absoluteContainer: {
     position: "absolute",
-    top: 100,
+    top: 93,
     left: 0,
     right: 0,
     zIndex: 10,
     backgroundColor: "transparent",
     paddingHorizontal: 0,
-    elevation: 5, // Android 그림자
-    shadowColor: "#000", // iOS 그림자
+    elevation: 5,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 3.84,
   },
   container: {
     backgroundColor: "transparent",
-    marginTop: 0,
-    marginBottom: 0,
     flexDirection: "row",
     columnGap: 4,
   },
   iconWrapper: {
-    display: "flex",
     width: 33,
     height: 33,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
   },
-  tag: {
-    backgroundColor: "#e0f7fa",
-    borderRadius: 16,
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    height: 28,
+  tagWrapper: {
+    position: "relative",
     justifyContent: "center",
     alignItems: "center",
+  },
+  tagText: {
+    position: "absolute",
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333",
   },
 });
 

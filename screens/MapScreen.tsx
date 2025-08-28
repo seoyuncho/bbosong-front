@@ -11,6 +11,7 @@ import MapMarkers from "../components/MapMarkers";
 import { Marker } from "../data/sampleMarkers";
 import HashtagList from "../components/HashtagList";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
 const API_URL = "https://bbosong-back-production.up.railway.app";
 
@@ -22,6 +23,7 @@ const MapScreen = (): React.JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Marker | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(0);
 
   // 전체 마커 불러오기 (초기화/해제용)
   const fetchAllMarkers = async () => {
@@ -71,9 +73,23 @@ const MapScreen = (): React.JSX.Element => {
   };
 
   const handleMarkerTap = (place: Marker) => {
+    // 마커 클릭 시 해당 위치로 카메라 이동
+    if (mapRef.current && place.latitude && place.longitude) {
+      mapRef.current.animateCameraTo({
+        latitude: place.latitude,
+        longitude: place.longitude,
+        zoom: 15,
+        duration: 1000,
+        easing: "EaseOut",
+      });
+    }
     setSelectedPlace(place);
     setIsModalVisible(true);
   };
+
+  // navigation param에서 place 추출
+  const route = useRoute<any>();
+  const place = route.params?.place;
 
   if (hasPermission === null) {
     return (
@@ -98,16 +114,27 @@ const MapScreen = (): React.JSX.Element => {
         style={{ flex: 1 }}
         isShowLocationButton={true}
         initialRegion={{
-          latitude: 37.56070378,
-          longitude: 126.9768616,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
+          // 37.560013, 126.975180 왼쪽 아래
+          // 37.567750, 126.979615 오른쪽 위
+          latitude: 37.560013,
+          longitude: 126.97518,
+          latitudeDelta: 0.0077,
+          longitudeDelta: 0.0045,
         }}
         ref={mapRef}
+        onCameraChanged={({ zoom }: any) => setZoomLevel(zoom)}
       >
-        <MapMarkers markers={markers} onMarkerTap={handleMarkerTap} />
+        <MapMarkers
+          markers={markers}
+          onMarkerTap={handleMarkerTap}
+          zoomLevel={zoomLevel}
+        />
       </NaverMapView>
-      <PlaceSearch mapRef={mapRef} onStoresFetched={handleSearchFetched} />
+      <PlaceSearch
+        mapRef={mapRef}
+        onStoresFetched={handleSearchFetched}
+        place={place}
+      />
       <HashtagList
         onStoresFetched={handleHashtagFetched}
         selectedTag={selectedTag}

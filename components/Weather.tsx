@@ -44,13 +44,12 @@ const Weather = () => {
     );
   }
   if (!weather || !weather.weather) {
-    return null;
-    // return (
-    //   <View style={[styles.view, { backgroundColor: "white" }]}>
-    //   <Text style={[{ color: "#999" }, styles.textTypo]}>오늘 날씨</Text>
-    //   <Text style={[{ color: "#537bff" }, styles.textTypo]}>맑음</Text>
-    // </View>
-    // )
+    return (
+      <View style={[styles.view, { backgroundColor: "white" }]}>
+      <Text style={[{ color: "#999" }, styles.textTypo]}>오늘 날씨</Text>
+      <Text style={[{ color: "#537bff" }, styles.textTypo]}>맑음</Text>
+    </View>
+    )
   }
   return (
     <View style={[styles.view, { backgroundColor: "white" }]}>
@@ -73,8 +72,7 @@ export default Weather;
 const styles = StyleSheet.create({
   textTypo: {
     textAlign: "right",
-    fontFamily: "Pretendard",
-    fontWeight: "500",
+    fontWeight: "600",
     fontSize: 12,
   },
   view: {
