@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { saveToken } from '../services/authService';
 import axios from 'axios';
 
+
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -61,9 +62,10 @@ const LoginScreen = ({ navigation }: any) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
+          
+          console.log('로그인 버튼 클릭됨');
           handleLogin();
           navigation.navigate('Main');
-          console.log('로그인 버튼 클릭됨');
         }}
       >
         <Text style={styles.buttonText}>로그인</Text>

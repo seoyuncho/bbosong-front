@@ -22,7 +22,7 @@ export default function QRReturnComplete() {
           <Icon name="arrow-back" size={wp("6%")} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>뽀송이 대여</Text>
-        <View style={{ width: wp("5%") }} />
+        {/* <View style={{ width: wp("5%") }} /> */}
       </View>
 
       {/* Main content */}

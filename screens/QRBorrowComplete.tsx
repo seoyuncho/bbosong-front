@@ -18,7 +18,7 @@ export default function QRBorrowComplete() {
         console.log("umbrellaId from storage:", umbrellaId);
         if (!umbrellaId) return;
 
-        const response = await axios.get(`http://10.254.205.115:3000/qr-scan/umbrella/${umbrellaId}`);
+        const response = await axios.get(`http://10.84.59.115:3000/qr-scan/umbrella/${umbrellaId}`);
         const umbrella = response.data.umbrella;
         setRentEnd(new Date(umbrella.rent_end));
       } catch (err) {
