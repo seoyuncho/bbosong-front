@@ -8,7 +8,7 @@ const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const API_URL = 'http://192.168.0.96:3000';
+  const API_URL = 'https://bbosong-back-production.up.railway.app';
 
   const handleLogin = async () => {
     try {
@@ -28,11 +28,8 @@ const LoginScreen = ({ navigation }: any) => {
       // 4xx, 5xx 같은 HTTP 에러 코드는 여기서 바로 잡힙니다.
       if (axios.isAxiosError(error)) {
         console.error('로그인 실패:', error.response?.data || error.message);
-        // 사용자에게 에러 메시지 표시
-        alert('로그인에 실패했습니다. 이메일과 비밀번호를 다시 확인해 주세요.');
       } else {
         console.error('예상치 못한 오류:', error);
-        alert('알 수 없는 오류가 발생했습니다.');
       }
     }
   };

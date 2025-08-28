@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Alert,
 } from "react-native";
 import Icon from "./src/frame-1707482364.svg";
 import Hot from "./src/frame-1707482361.svg";
@@ -15,7 +14,7 @@ import Rain from "./src/frame-1707482363.svg";
 import IconChange from "./src/x.svg";
 import Instruction from "./src/instruction.svg";
 
-const API_URL = "http://192.168.0.96:3000";
+const API_URL = "https://bbosong-back-production.up.railway.app";
 
 const hashtagComponents = [
   { tag: "#hot", Component: Hot },
@@ -82,8 +81,21 @@ const HashtagList = ({
     onStoresFetched([]);
   };
 
+  const [showInstruction, setShowInstruction] = useState(true);
+
+  useEffect(() => {
+    if (showInstruction) {
+      const timer = setTimeout(() => setShowInstruction(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showInstruction]);
+
+  const handleContainerPress = () => {
+    if (showInstruction) setShowInstruction(false);
+  };
+
   return (
-    <View style={styles.absoluteContainer}>
+    <View style={styles.absoluteContainer} onTouchStart={handleContainerPress}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -112,7 +124,9 @@ const HashtagList = ({
               );
             })()}
       </ScrollView>
-      <Instruction style={{ position: "absolute", top: 30 }} />
+      {showInstruction && (
+        <Instruction style={{ position: "absolute", top: 30 }} />
+      )}
     </View>
   );
 };

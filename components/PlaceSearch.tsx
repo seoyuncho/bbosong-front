@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
 // 백엔드 API URL
-const API_URL = "http://192.168.0.96:3000";
+const API_URL = "https://bbosong-back-production.up.railway.app";
 
 import { Marker } from "../data/sampleMarkers";
 type PlaceSearchProps = {

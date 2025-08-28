@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }: any) => {
   });
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const API_URL = 'http://192.168.0.96:3000';
+  const API_URL = 'https://bbosong-back-production.up.railway.app';
 
   const handleNext = () => {
     setStep(step + 1);
@@ -55,10 +55,8 @@ const SignupScreen = ({ navigation }: any) => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('회원가입 실패:', error.response?.data || error.message);
-        alert('회원가입에 실패했습니다. 다시 시도해 주세요.');
       } else {
         console.error('예상치 못한 오류:', error);
-        alert('알 수 없는 오류가 발생했습니다.');
       }
     }
   };
