@@ -1,19 +1,60 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import {useState, useEffect} from "react";
+
+import {jwtDecode} from 'jwt-decode';
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RewardComplete() {
   const navigation = useNavigation();
+  const [bubbleCount, setBubbleCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+
+        const token = await AsyncStorage.getItem('token'); 
+        if (!token) {
+          console.log("No token found");
+          return;
+        }
+        const decoded: any = jwtDecode(token);
+        console.log("Decoded JWT:", decoded);      
+        //const userId = Number(decoded.id);
+
+        // if (isNaN(userId)) {
+        //   throw new Error('Invalid user ID in token');
+        // }
+
+        // /mypage API 호출
+        const userId = 3;
+        const res = await axios.get(`http://192.168.50.216:3000/mypage?userId=${userId}`);
+
+        setBubbleCount(res.data.bubbleCount); // bubble_count 상태에 저장
+      } catch (error) {
+        console.log("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
   return (
-    <View style={styles.container}>
+    <LinearGradient
+          colors={['#FFFFFF', '#CDD7E4', '#A1ACD280']}
+          locations={[0, 0.5, 1]}
+          style={styles.container}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.navigate("RewardCommit" as never)}
         >
-          <Icon name="arrow-back" size={wp("6%")} color="#000" />
+          <Icon name="arrow-back" size={18} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>리워드 받기</Text>
         <View style={{ width: wp("6%") }} />
@@ -25,27 +66,33 @@ export default function RewardComplete() {
           방울이 <Text style={styles.highlight}>3개</Text> 적립되었어요!
         </Text>
 
-        <Image
-          source={require("../assets/reward_bubble.jpg")} // 방울 이미지 (투명 배경)
-          style={styles.bubbleImage}
-          resizeMode="contain"
-        />
+        <View style={styles.content}>
+          {/* 방울 이미지만 정중앙 */}
+          <Image
+            source={require("../assets/reward_bubble.png")}
+            style={styles.bubbleImage}
+            resizeMode="contain"
+          />
+        </View>
 
-        <View style={styles.rewardBox}>
+        {/* 보유 중인 방울 카드 */}
+        <View style={styles.rewardCardContainer}>
+          <View style={styles.rewardBox}>
             <View style={styles.rewardRow}>
-                <Text style={styles.rewardLabel}>보유 중인 방울이</Text>
-                <View style={styles.iconRow}>
-                    <Image
-                        source={require("../assets/bubble.png")}
-                        style={styles.rewardIcon}
-                        resizeMode="contain"
-                    />
-                    <Text style={styles.rewardValue}>6개</Text>
-                </View>
+              <Text style={styles.rewardLabel}>보유 중인 방울이</Text>
+              <View style={styles.iconRow}>
+                <Image
+                  source={require("../assets/bubble.png")}
+                  style={styles.rewardIcon}
+                  resizeMode="contain"
+                />
+                <Text style={styles.rewardValue}>{bubbleCount}개</Text>
+              </View>
             </View>
-          <Text style={styles.subText}>
-            비눗방울 3개로 1일(24시간) 연장할 수 있어요.
-          </Text>
+            <Text style={styles.subText}>
+              비눗방울 3개로 1일(24시간) 연장할 수 있어요.
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -56,7 +103,7 @@ export default function RewardComplete() {
         >
         <Text style={styles.buttonText}>확인</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -64,27 +111,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp("5%"),
-    paddingTop: hp("5%"),
-    backgroundColor: "#f0f2fa",
+    paddingTop: hp("7%"),
+    // backgroundColor: "#f0f2fa",
     justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: hp("2%"),
+    // paddingVertical: hp("3%"),
   },
   headerTitle: {
-    fontSize: wp("5%"),
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "600",
   },
   content: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
+    paddingTop: hp("10%"),
   },
   message: {
-    fontSize: wp("4.5%"),
+    fontSize: 20,
     fontWeight: "600",
     marginBottom: hp("3%"),
     textAlign: "center",
@@ -96,7 +144,13 @@ const styles = StyleSheet.create({
   bubbleImage: {
     width: wp("60%"),
     height: hp("30%"),
-    marginBottom: hp("3%"),
+    // marginTop: hp("10%"),
+  },
+  rewardCardContainer: {
+    width: "100%",
+    paddingTop: hp("13%"),
+    paddingBottom: hp("3%"), // 확인 버튼과의 간격
+    alignItems: "center",
   },
   rewardBox: {
     width: "100%",
@@ -105,14 +159,12 @@ const styles = StyleSheet.create({
     height: hp("13%"),
     paddingVertical: hp("2%"),
     paddingHorizontal: wp("4%"),
-    // alignItems: "flex-start", // 왼쪽 정렬
-    marginBottom: hp("1%"),
     elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    },
+  },
     rewardRow: {
     flexDirection: "row",
     paddingTop: hp("1%"),
@@ -129,18 +181,18 @@ const styles = StyleSheet.create({
     marginRight: wp("1%"),
     },
     rewardLabel: {
-    fontSize: wp("4.5%"),
+    fontSize: 18,
     color: "#111",
     fontWeight: "600",
     marginRight: wp("1%"),
     },
     rewardValue: {
-    fontSize: wp("4.5%"),
+    fontSize: 18,
     fontWeight: "600",
     color: "#537BFF",
     },
   subText: {
-    fontSize: wp("4%"),
+    fontSize: 15,
     paddingHorizontal: wp("2%"),
     color: "#343434",
     opacity: 0.67,
@@ -156,7 +208,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: wp("4.5%"),
+    fontSize: 16,
     fontWeight: "600",
   },
 });

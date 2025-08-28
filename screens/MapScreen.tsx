@@ -12,7 +12,7 @@ import { Marker } from "../data/sampleMarkers";
 import HashtagList from "../components/HashtagList";
 import axios from "axios";
 
-const API_URL = "http://192.168.0.96:3000";
+const API_URL = "http://192.168.50.216:3000";
 
 const MapScreen = (): React.JSX.Element => {
   const { hasPermission } = useLocationPermission();

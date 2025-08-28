@@ -15,7 +15,7 @@ import Rain from "./src/frame-1707482363.svg";
 import IconChange from "./src/x.svg";
 import Instruction from "./src/instruction.svg";
 
-const API_URL = "http://192.168.0.96:3000";
+const API_URL = "http://192.168.50.216:3000";
 
 const hashtagComponents = [
   { tag: "#hot", Component: Hot },
