@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: wp("5%"),
-    left: -wp("3%"), // 중앙정렬을 위한 트릭
+    left: -wp("1.5%"), // 중앙정렬을 위한 트릭
     color: "#fff",
     fontWeight: "600",
     textAlign: "center",
