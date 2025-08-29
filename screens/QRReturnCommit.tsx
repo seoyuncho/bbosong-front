@@ -22,54 +22,70 @@ export default function QRReturnCommit() {
   useEffect(() => {
     const fetchUmbrellaInfo = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
-        if (!token) return;
+        // const token = await AsyncStorage.getItem("token");
+        // if (!token) return;
 
-        // const decoded: any = jwtDecode(token);
-        // const userId = Number(decoded.id);
-        // if (isNaN(userId)) throw new Error("Invalid user ID in token");
-        const userId = 3;
+        // // const decoded: any = jwtDecode(token);
+        // // const userId = Number(decoded.id);
+        // // if (isNaN(userId)) throw new Error("Invalid user ID in token");
+        // const userId = 3;
 
-        // API 호출
-        const res = await axios.get(
-          `https://bbosong-back-production.up.railway.app/user-qr/my-umbrella?userId=${userId}`
-        );
-        const umbrella = res.data.umbrella;
-        console.log("umbrella:", umbrella);
+        // // API 호출
+        // const res = await axios.get(
+        //   `https://bbosong-back-production.up.railway.app/user-qr/my-umbrella?userId=${userId}`
+        // );
+        // const umbrella = res.data.umbrella;
+        // console.log("umbrella:", umbrella);
+
+        const getUmbrellaDB = async () => {
+          try {
+            const jsonValue = await AsyncStorage.getItem("umbrellaDB");
+            if (jsonValue !== null) {
+              const umbrellaDB = JSON.parse(jsonValue); // ← 원래 객체 복원
+              console.log("저장된 umbrellaDB:", umbrellaDB);
+              return umbrellaDB;
+            }
+            return null;
+          } catch (error) {
+            console.error("umbrellaDB 가져오기 실패:", error);
+            return null;
+          }
+        };
+
+        const umbrella = await getUmbrellaDB();
+
 
         if (umbrella) {
-          // ✅ station_return_id → station_name 조회
-          const stationRes = await axios.get(
-            `https://bbosong-back-production.up.railway.app/user-qr/station-name?stationId=${umbrella.station_return_id}`
-          );
-
-          setStationName(stationRes.data.stationName);
+          setStationName(umbrella.station);
+          // await AsyncStorage.removeItem("umbrella_id");
 
           // ❌ 여기서 또 setStationName(umbrella.station.name); 쓰면 station 없을 때 에러 → 제거 추천
           // setStationName(umbrella.station.name);
 
-          const start = new Date(umbrella.rent_start);
-          const end = new Date(umbrella.rent_end);
+          const start = new Date(umbrella.umbrella.rent_start);
+          const end = new Date(umbrella.umbrella.rent_end);
           setRentStart(start);
           setRentEnd(end);
-
-          // 사용시간 계산
-          const now = new Date();
-          const usedMs = now.getTime() - start.getTime();
+          const usedMs = umbrella.usedMs;
           const usedHours = Math.floor(usedMs / (1000 * 60 * 60));
           const usedMinutes = Math.floor(
             (usedMs % (1000 * 60 * 60)) / (1000 * 60)
           );
-          setUsedTime(`${usedHours}시간 ${usedMinutes}분`);
+
+          const usedTime = `${usedHours}시간 ${usedMinutes}분`;
+
+          // 사용시간 계산
+          setUsedTime(usedTime);
+          const totalMs = 24 * 60 * 60 * 1000;
 
           // 남은시간 계산
-          const remainingMs = end.getTime() - now.getTime();
+          const remainingMs = totalMs- umbrella.usedMs;
           if (remainingMs > 0) {
             const remHours = Math.floor(remainingMs / (1000 * 60 * 60));
             const remMinutes = Math.floor(
               (remainingMs % (1000 * 60 * 60)) / (1000 * 60)
             );
-            setRemainingTime(`${remHours}시간 ${remMinutes}분 남음`);
+            setRemainingTime(`${remHours}시간 ${remMinutes}분`);
           } else {
             setRemainingTime("반납시간 초과");
           }

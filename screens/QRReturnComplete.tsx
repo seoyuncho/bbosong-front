@@ -19,39 +19,34 @@ export default function QRReturnComplete() {
   useEffect(() => {
     const fetchStationName = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
-        if (!token) return;
+        const getUmbrellaDB = async () => {
+          try {
+            const jsonValue = await AsyncStorage.getItem("umbrellaDB");
+            if (jsonValue !== null) {
+              const umbrellaDB = JSON.parse(jsonValue); // ← 원래 객체 복원
+              console.log("저장된 umbrellaDB:", umbrellaDB);
+              return umbrellaDB;
+            }
+            return null;
+          } catch (error) {
+            console.error("umbrellaDB 가져오기 실패:", error);
+            return null;
+          }
+        };
 
-        // const decoded: any = jwtDecode(token);
-        // const userId = Number(decoded.id);
-        // if (isNaN(userId)) throw new Error("Invalid user ID in token");
-        const userId = 3;
-
-        // API 호출
-        const res = await axios.get(
-          `https://bbosong-back-production.up.railway.app/user-qr/my-umbrella?userId=${userId}`
-        );
-        const umbrella = res.data.umbrella;
-        console.log("umbrella:", umbrella);
+        const umbrella = await getUmbrellaDB();
 
         if (umbrella) {
-          // ✅ station_return_id → station_name 조회
-          const stationRes = await axios.get(
-            `https://bbosong-back-production.up.railway.app/user-qr/station-name?stationId=${umbrella.station_return_id}`
-          );
-          setStationName(stationRes.data.stationName);
-
-          const start = new Date(umbrella.rent_start);
-          setRentStart(start);
-
-          // 사용시간 계산
-          const now = new Date();
-          const usedMs = now.getTime() - start.getTime();
+          setStationName(umbrella.station);
+          const usedMs = umbrella.usedMs;
           const usedHours = Math.floor(usedMs / (1000 * 60 * 60));
           const usedMinutes = Math.floor(
             (usedMs % (1000 * 60 * 60)) / (1000 * 60)
           );
-          setUsedTime(`${usedHours}시간 ${usedMinutes}분`);
+
+          const usedTime = `${usedHours}시간 ${usedMinutes}분`;
+          setRentStart(umbrella.usedTime);
+          setUsedTime(usedTime);
         }
 
         
@@ -83,7 +78,7 @@ export default function QRReturnComplete() {
 
       {/* Main content */}
       <View style={styles.content}>
-        <Text style={styles.stationText}>{stationName}</Text>
+        <Text style={styles.stationText}>뽀송 스테이션 {stationName}</Text>
         <Text style={styles.completeText}>우산 반납이 완료되었어요.</Text>
 
         <View style={styles.checkCircle}>

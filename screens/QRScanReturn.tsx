@@ -55,12 +55,20 @@ export default function QRScanReturn() {
         return;
       }
 
-      const decoded: any = jwtDecode(token);
-      console.log("Decoded JWT:", decoded);      
-      const userId = Number(decoded.id);
-        if (isNaN(userId)) {
-          throw new Error('Invalid user ID in token');
-      }
+      // const decoded: any = jwtDecode(token);
+      // console.log("Decoded JWT:", decoded);      
+      // const userId = Number(decoded.id);
+      //   if (isNaN(userId)) {
+      //     throw new Error('Invalid user ID in token');
+      // }
+      const userId = 3; // TODO: 임시 하드코딩
+
+      // ✅ 반납 전 내 우산 상태 조회
+      const myUmbrella = await axios.get(
+        `https://bbosong-back-production.up.railway.app/user-qr/my-umbrella?userId=${userId}`
+      );
+      console.log("***내 우산 정보***", myUmbrella.data);
+
 
       const payload = { userId: userId, returnStationName: station };
       console.log("payload:", payload);
@@ -69,7 +77,17 @@ export default function QRScanReturn() {
       console.log("반납 성공:", response.data);
 
       setMessage(`✅ ${station} 에 우산 반납 완료`);
-      await AsyncStorage.removeItem("umbrella_id"); // 반납 완료 후 캐시 삭제
+
+      // 사용시간 계산
+      const now = new Date();
+      const usedMs = now.getTime() - new Date(myUmbrella.data.umbrella.rent_start).getTime();;
+
+      // ✅ umbrella + stationName 합쳐서 AsyncStorage에 저장
+      const umbrellaDB = { ...myUmbrella.data, station, usedMs };
+      await AsyncStorage.setItem("umbrellaDB", JSON.stringify(umbrellaDB));
+
+      console.log("umbrellaDB 저장 완료:", umbrellaDB);
+
 
       setTimeout(() => {
         navigation.navigate("QRReturnCommit" as never);

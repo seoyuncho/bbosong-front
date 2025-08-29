@@ -9,8 +9,55 @@ import Icon from "./src/bbosong.svg";
 import FloatingButton from "../components/FloatingButton";
 import Reward from "./src/reward.svg";
 import Weather from "../components/Weather";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MainScreen = ({ navigation }: any) => {
+  const [showButton, setShowButton] = useState(false);
+
+  useEffect(() => {
+    const fetchUmbrellaStatus = async () => {
+      try {
+        // // 토큰 or userId 가져오기
+        // const token = await AsyncStorage.getItem("token");
+        // if (!token) return;
+
+        // const userId = JSON.parse(token).id; // jwtDecode 써도 됨
+        const userId = 3;
+        const res = await axios.get(
+          `https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`
+        );
+
+        console.log("마이페이지 데이터:", res.data);
+        // ✅ 캐시 삭제 + 로그 확인
+        const clearUmbrellaDB = async () => {
+          try {
+            await AsyncStorage.removeItem("umbrellaDB");
+            console.log("umbrellaDB 캐시 삭제 완료 ✅");
+
+            // 삭제 후 값 확인 (null이어야 정상)
+            const check = await AsyncStorage.getItem("umbrellaDB");
+            console.log("삭제 후 umbrellaDB:", check);
+          } catch (error) {
+            console.error("umbrellaDB 캐시 삭제 실패 ❌:", error);
+          }
+        };
+
+        // umbrella_id 확인
+        if (res.data.umbrellaId == null) {
+          setShowButton(false);
+          clearUmbrellaDB();          
+        } else {
+          setShowButton(true);
+        }
+      } catch (err) {
+        console.error("마이페이지 조회 실패:", err);
+      }
+    };
+
+    fetchUmbrellaStatus();
+  }, []);
   return (
     <LinearGradient
       colors={["#ffffff", "#CDD7E4", "#A1ACD2"]}
@@ -23,7 +70,7 @@ const MainScreen = ({ navigation }: any) => {
         gap: 8,
       }}
     >
-      <FloatingButton />
+      {showButton && <FloatingButton />}
       <View
         style={{
           flex: 2,
