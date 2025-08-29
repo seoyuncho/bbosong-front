@@ -8,6 +8,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Icon from "./src/bbosong.svg";
 import FloatingButton from "../components/FloatingButton";
 import Reward from "./src/reward.svg";
+import Weather from "../components/Weather";
 
 const MainScreen = ({ navigation }: any) => {
   return (
@@ -32,10 +33,7 @@ const MainScreen = ({ navigation }: any) => {
       >
         <Icon style={{ marginTop: 40 }} />
         <View style={{ marginTop: 20, elevation: 7, borderRadius: 19 }}>
-          <View style={[styles.view, { backgroundColor: "white" }]}>
-            <Text style={[{ color: "#999" }, styles.textTypo]}>오늘 날씨</Text>
-            <Text style={[{ color: "#537bff" }, styles.textTypo]}>맑음</Text>
-          </View>
+          <Weather />
         </View>
       </View>
       <View

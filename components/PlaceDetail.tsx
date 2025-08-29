@@ -4,13 +4,13 @@ import {
   Text,
   Modal,
   StyleSheet,
-  TouchableOpacity,
   Image,
   Pressable,
   PanResponder,
 } from "react-native";
 import { Marker } from "../data/sampleMarkers";
 import { LinearGradient } from "expo-linear-gradient";
+import Bubbles from "./src/bubbles.svg";
 
 interface PlaceDetailProps {
   isVisible: boolean;
@@ -55,7 +55,7 @@ const PlaceDetail: React.FC<PlaceDetailProps> = ({
     // 카테고리별 이미지 매핑
     switch (store.category) {
       case "station":
-        imageSource = require("./src/station100.png");
+        imageSource = require("./src/station.png");
         break;
       case "recommendation":
         imageSource = require("./src/recommendation.png");
@@ -104,25 +104,54 @@ const PlaceDetail: React.FC<PlaceDetailProps> = ({
             >
               <Text style={styles.modalTitle}>{place.caption}</Text>
               <Text style={styles.modalSubtitle}>{place.subCaption}</Text>
-              <LinearGradient
-                colors={["#537BFF", "#8EC5FF"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-                style={{
-                  width: "100%",
-                  height: 35,
-                  borderRadius: 40,
-                  paddingHorizontal: 14,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={{ fontSize: 14, color: "white" }}>
-                  현재 남은 우산
-                </Text>
-                <Text style={{ fontSize: 14, color: "white" }}>22/30</Text>
-              </LinearGradient>
+              {store?.category === "station" && (
+                <LinearGradient
+                  colors={["#537BFF", "#8EC5FF"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  style={{
+                    width: "100%",
+                    height: 35,
+                    borderRadius: 40,
+                    paddingHorizontal: 14,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "white" }}>
+                    현재 남은 우산
+                  </Text>
+                  <Text style={{ fontSize: 14, color: "white" }}>
+                    {/* {store.umbrellaCount ?? "?"}/30개 */}
+                  </Text>
+                </LinearGradient>
+              )}
+              {(store?.category === "recommendation" ||
+                store?.category === "sponsor") && (
+                <LinearGradient
+                  colors={["#537BFF", "#8EC5FF"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  style={{
+                    width: "100%",
+                    height: 35,
+                    borderRadius: 40,
+                    paddingHorizontal: 14,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "white" }}>
+                    방문 리워드
+                  </Text>
+                  <Text style={{ fontSize: 14, color: "white", fontWeight: "bold" }}>
+                    방울 3개
+                  </Text>
+                  <Bubbles />
+                </LinearGradient>
+              )}
             </View>
           </View>
         </View>

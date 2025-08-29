@@ -145,7 +145,7 @@ export default function QRReturnCommit() {
             <Text style={styles.infoText}>
               반납시간: <Text style={styles.highlight}>{returnTimeText}</Text>
               </Text>
-            <Text style={styles.subInfo}>반납시간까지 {remainingTime}</Text>
+            <Text style={styles.subInfo}>반납시간까지 {remainingTime} 남음</Text>
           </View>
         </View>
 
