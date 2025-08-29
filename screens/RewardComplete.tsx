@@ -33,7 +33,7 @@ export default function RewardComplete() {
 
         // /mypage API 호출
         const userId = 3;
-        const res = await axios.get(`http://192.168.50.216:3000/mypage?userId=${userId}`);
+        const res = await axios.get(`https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`);
 
         setBubbleCount(res.data.bubbleCount); // bubble_count 상태에 저장
       } catch (error) {
@@ -111,11 +111,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp("5%"),
-    paddingTop: hp("7%"),
+    // paddingTop: hp("7%"),
     // backgroundColor: "#f0f2fa",
     justifyContent: "space-between",
   },
   header: {
+    paddingTop: hp("7%"),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
     borderRadius: wp("5%"),
     paddingVertical: hp("1.5%"),
     alignItems: "center",
-     marginBottom: hp("2.5%"),
+     marginBottom: hp("5.5%"),
   },
   buttonText: {
     color: "#fff",

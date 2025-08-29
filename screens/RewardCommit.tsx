@@ -83,15 +83,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp("5%"),
-    paddingTop: hp("2%"),
-    justifyContent: "space-between",
-    paddingBottom: hp("2%"),
+    // paddingTop: hp("2%"),
+    // justifyContent: "space-between",
+    // paddingBottom: hp("2%"),
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: hp("5%"),
+    paddingVertical: hp("7%"),
     // padding: hp("5%"),
   },
   backButton: {
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     borderRadius: wp("5%"),
     paddingVertical: hp("1.5%"),
     alignItems: "center",
-    marginBottom: hp("5%"),
+    marginBottom: hp("5.5%"),
   },
   confirmText: {
     color: "#fff",
