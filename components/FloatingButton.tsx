@@ -43,7 +43,7 @@ const FloatingButton = () => {
         // const decoded: any = jwtDecode(token);
         // const userId = Number(decoded.id);
         // if (isNaN(userId)) throw new Error("Invalid user ID in token");
-        const res = await axios.get(`http://10.84.59.115:3000/mypage?userId=${userId}`);
+        const res = await axios.get(`https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`);
         const user = res.data;
         // umbrella_id가 null이 아니면 대여중
         console.log(user)
