@@ -35,9 +35,9 @@ export default function QRScreen() {
 
         {/* 카드 영역 */}
         <TouchableOpacity style={styles.card} 
-            // onPress={() => navigation.navigate("QRScanBorrow" as never)}
+            onPress={() => navigation.navigate("QRScanBorrow" as never)}
             //onPress={() => navigation.navigate("QRBorrowRecommend"  as never)}
-            onPress={()=>navigation.navigate("QRBorrowCommit" as never)}
+            // onPress={()=>navigation.navigate("QRBorrowCommit" as never)}
           >
             <View>
             <Text style={styles.cardTitle}><Text style={styles.blue}>뽀송이</Text> 대여</Text>

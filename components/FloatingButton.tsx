@@ -8,11 +8,14 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
 
 const FloatingButton = () => {
-  // 시작은 (0,0) → 스타일의 bottom/right 기준으로 위치 결정
   const pan = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const [time, setTime] = useState("");
+  const [isBorrowing, setIsBorrowing] = useState(false);
   const navigation = useNavigation<any>();
 
   // 현재 시간 갱신
@@ -29,6 +32,30 @@ const FloatingButton = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // 대여 여부 체크 (API 호출)
+  useEffect(() => {
+    const fetchBorrowStatus = async () => {
+      try {
+        const userId = 3; // 예시: 실제로는 AsyncStorage 토큰 등에서 가져오기
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return;
+
+        // const decoded: any = jwtDecode(token);
+        // const userId = Number(decoded.id);
+        // if (isNaN(userId)) throw new Error("Invalid user ID in token");
+        const res = await axios.get(`http://10.84.59.115:3000/mypage?userId=${userId}`);
+        const user = res.data;
+        // umbrella_id가 null이 아니면 대여중
+        console.log(user)
+        setIsBorrowing(user.umbrella_id !== null);
+      } catch (err) {
+        console.error("대여 상태 확인 실패:", err);
+      }
+    };
+
+    fetchBorrowStatus();
+  },);
+
   // 드래그 핸들러
   const panResponder = useRef(
     PanResponder.create({
@@ -37,15 +64,16 @@ const FloatingButton = () => {
         useNativeDriver: false,
       }),
       onPanResponderRelease: (e, gesture) => {
-        // 클릭 vs 드래그 구분 (거의 안 움직였으면 클릭으로 판단)
         if (Math.abs(gesture.dx) < 5 && Math.abs(gesture.dy) < 5) {
-          console.log("버튼 클릭됨!");
-          navigation.navigate("BorrowInfo")
+          navigation.navigate("BorrowInfo");
         }
         pan.extractOffset();
       },
     })
   ).current;
+
+  // umbrella_id가 null이면 버튼 자체를 안 보이게
+  if (!isBorrowing) return null;
 
   return (
     <Animated.View
@@ -70,7 +98,7 @@ const FloatingButton = () => {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 40, // ✅ 초기 위치는 여기서 제어
+    bottom: 40,
     right: 20,
     zIndex: 99,
     elevation: 99,
