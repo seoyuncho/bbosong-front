@@ -85,7 +85,7 @@ const MainScreen = ({ navigation }: any) => {
           </View>
           </View>
           <View>
-            <TouchableOpacity style={{ borderRadius: 20, backgroundColor: "#FFFFFF"}}>
+            <TouchableOpacity style={{ borderRadius: 20, backgroundColor: "#FFFFFF"}} onPress={() => navigation.navigate("QRScanReward" as never)}>
               <Reward />
             </TouchableOpacity>
           </View>

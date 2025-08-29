@@ -128,6 +128,7 @@ const MapScreen = (): React.JSX.Element => {
           markers={markers}
           onMarkerTap={handleMarkerTap}
           zoomLevel={zoomLevel}
+          selectedTag={selectedTag ?? undefined}
         />
       </NaverMapView>
       <PlaceSearch

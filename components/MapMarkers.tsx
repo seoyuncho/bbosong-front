@@ -6,10 +6,41 @@ interface MapMarkersProps {
   markers: Marker[];
   onMarkerTap: (marker: Marker) => void;
   zoomLevel: number;
+  selectedTag?: string; // 추가된 부분
 }
 
-const getDbMarkerImage = (marker: Marker) => {
-  // 우리 DB(내 가게)라면 카테고리별 커스텀 마커, 없으면 기본
+// 해시태그별 마커 이미지 매핑
+const hashtagImageMap: Record<string, any> = {
+  // recommendation
+  "#hot": require("./src/recommendation-hot.png"),
+  "#cool": require("./src/recommendation-cool.png"),
+  "#cafe": require("./src/recommendation-cafe.png"),
+  "#rain": require("./src/recommendation-rain.png"),
+  // culture
+  "culture-hot": require("./src/culture-hot.png"),
+  "culture-cool": require("./src/culture-cool.png"),
+  "culture-cafe": require("./src/culture-cafe.png"),
+  "culture-rain": require("./src/culture-rain.png"),
+};
+
+const getDbMarkerImage = (marker: Marker, selectedTag?: string) => {
+  // 해시태그가 선택된 경우 store/culture만 해시태그별 이미지 적용
+  if (selectedTag && marker.description) {
+    if (
+      marker.description === "recommendation" &&
+      hashtagImageMap[selectedTag]
+    ) {
+      return hashtagImageMap[selectedTag];
+    }
+    if (marker.description === "culture") {
+      // selectedTag가 #hot이면 key는 'culture-hot'
+      const key = `culture-${selectedTag.replace("#", "")}`;
+      if (hashtagImageMap[key]) {
+        return hashtagImageMap[key];
+      }
+    }
+  }
+  // 기본 카테고리별 마커
   switch (marker.description) {
     case "station":
       return require("./src/station.png");
@@ -28,6 +59,7 @@ const MapMarkers: React.FC<MapMarkersProps> = ({
   markers,
   onMarkerTap,
   zoomLevel,
+  selectedTag,
 }) => {
   return (
     <>
@@ -35,12 +67,12 @@ const MapMarkers: React.FC<MapMarkersProps> = ({
         // 우리 DB(내 가게)라면 store가 존재
         const isDb = !!marker.store;
         const image = isDb
-          ? getDbMarkerImage(marker)
+          ? getDbMarkerImage(marker, selectedTag)
           : require("./src/black.png");
         // 외부 검색 결과는 항상 기본 마커(black.png)
         return zoomLevel >= 18 ? (
           <NaverMapMarkerOverlay
-            key={marker.id}
+            key={marker.id + zoomLevel}
             latitude={marker.latitude}
             longitude={marker.longitude}
             onTap={() => onMarkerTap(marker)}
@@ -52,7 +84,7 @@ const MapMarkers: React.FC<MapMarkersProps> = ({
           />
         ) : (
           <NaverMapMarkerOverlay
-            key={marker.id}
+            key={marker.id + zoomLevel}
             latitude={marker.latitude}
             longitude={marker.longitude}
             onTap={() => onMarkerTap(marker)}

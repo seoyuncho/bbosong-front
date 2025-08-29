@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Arrow from './src/arrow.svg';
+import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
 import { UserGender, UserType } from './enums/UserType';
 
@@ -238,7 +238,7 @@ const SignupScreen = ({ navigation }: any) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
-          <Arrow width={24} height={24} />
+          <Ionicons name="arrow-back" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>회원가입</Text>
         {step <= 3 && <Text>{step}/3</Text>}
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 30,
+    paddingTop: 45,
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
