@@ -13,6 +13,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import {jwtDecode} from 'jwt-decode';
 import axios from "axios";
 
@@ -64,7 +65,7 @@ export default function QRScanReturn() {
       const payload = { userId: userId, returnStationName: station };
       console.log("payload:", payload);
 
-      const response = await axios.post("http://192.168.0.92:3000/user-qr/return", payload);
+      const response = await axios.post("https://bbosong-back-production.up.railway.app/user-qr/return", payload);
       console.log("반납 성공:", response.data);
 
       setMessage(`✅ ${station} 에 우산 반납 완료`);
@@ -72,7 +73,7 @@ export default function QRScanReturn() {
 
       setTimeout(() => {
         navigation.navigate("QRReturnCommit" as never);
-      }, 1500);
+      }, 500);
 
     } catch (err: any) {
       console.warn("반납 실패:", err.response?.data || err.message);
@@ -110,7 +111,7 @@ export default function QRScanReturn() {
               <TouchableOpacity onPress={() => navigation.navigate("QRScreen" as never)}>
                 <Ionicons name="arrow-back" size={24} color="#F1F1F1" />
               </TouchableOpacity>
-              <Text style={styles.title}>뽀송이 반납</Text>
+              <Text style={styles.headerTitle}>뽀송이 반납</Text>
               <View style={{ width: 24 }} />
             </View>
 
@@ -165,20 +166,71 @@ export default function QRScanReturn() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#565656" },
-  camStyle: { flex: 1, width: "100%", alignItems: "center" },
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(86,86,86,0.5)", alignItems: "center" },
-  header: { position: "absolute", top: 50, left: 0, right: 0, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16 },
-  title: { position: "absolute", left: "50%", transform: [{ translateX: -25 }], fontSize: 20, fontWeight: "bold", color: "#F1F1F1", textAlign: "center" },
-  subtitle: { marginTop: 140, fontSize: 18, textAlign: "center", color: "#fff", lineHeight: 20 },
-  scanBox: { marginTop: 80, width: 200, height: 200, justifyContent: "space-between" },
-  corner: { position: "absolute", width: 20, height: 20, borderColor: "#fff" },
-  topLeft: { top: 0, left: 0, borderLeftWidth: 3, borderTopWidth: 3 },
-  topRight: { top: 0, right: 0, borderRightWidth: 3, borderTopWidth: 3 },
-  bottomLeft: { bottom: 0, left: 0, borderLeftWidth: 3, borderBottomWidth: 3 },
-  bottomRight: { bottom: 0, right: 0, borderRightWidth: 3, borderBottomWidth: 3 },
-  button: { marginTop: 150, width: '90%', paddingVertical: 16, borderRadius: 30, height: 50, backgroundColor: '#537BFF', alignItems: 'center', marginBottom: 30 },
-  buttonText: { color: '#FDFDFD', fontSize: 16, fontWeight: '600' },
+  container: {
+      flex: 1,
+      backgroundColor: "#565656",
+      justifyContent: "space-between",
+    },
+    camStyle: { flex: 1, width: "100%", alignItems: "center" },
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: "rgba(86, 86, 86, 0.5)",
+      alignItems: "center",
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingTop: hp("7%"),
+      paddingHorizontal: wp("5%"), // arrow 끝까지 붙도록
+      justifyContent: "space-between",
+    },
+    backButton: {
+      width: wp("6%"),
+      alignItems: "flex-start",
+    },
+    headerTitle: {
+      fontSize: wp("5%"),
+      // left: -wp("%"), // 중앙정렬을 위한 트릭
+      color: "#fff",
+      fontWeight: "600",
+      textAlign: "center",
+      flex: 1,
+    },
+    subtitle: {
+      marginTop: hp("15%"),
+      fontSize: wp("5%"),
+      textAlign: "center",
+      color: "#fff",
+      lineHeight: hp("3.5%"),
+    },
+    scanBox: {
+      marginTop: hp("10%"),
+      width: wp("50%"),
+      height: wp("50%"),
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    corner: { position: "absolute", width: wp("5%"), height: wp("5%"), borderColor: "#fff" },
+    topLeft: { top: 0, left: 0, borderLeftWidth: 3, borderTopWidth: 3 },
+    topRight: { top: 0, right: 0, borderRightWidth: 3, borderTopWidth: 3 },
+    bottomLeft: { bottom: 0, left: 0, borderLeftWidth: 3, borderBottomWidth: 3 },
+    bottomRight: { bottom: 0, right: 0, borderRightWidth: 3, borderBottomWidth: 3 },
+    button: {
+      position: "absolute",
+      backgroundColor: "#537BFF",
+      borderRadius: wp("5%"),
+      width: wp("90%"),
+      height: hp("6%"),
+      bottom: hp("2%"),
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: hp("4%"),
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: wp("4.5%"),
+      fontWeight: "600",
+    },
   messageBox: { position: "absolute", bottom: 100, alignSelf: "center", backgroundColor: "rgba(0,0,0,0.6)", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 12 },
   messageText: { color: "#fff", fontSize: 16, fontWeight: "600" },
   permissionContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#fff" },
