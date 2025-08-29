@@ -54,12 +54,13 @@ export default function QRScanBorrow() {
         throw new Error("로그인 토큰이 없습니다.");
         //return;
       }      
-      const decoded: any = jwtDecode(token);
-      console.log("Decoded JWT:", decoded);      
-      const userId = Number(decoded.id);
-        if (isNaN(userId)) {
-          throw new Error('Invalid user ID in token');
-      }
+      // const decoded: any = jwtDecode(token);
+      // console.log("Decoded JWT:", decoded);      
+      // const userId = Number(decoded.id);
+      //   if (isNaN(userId)) {
+      //     throw new Error('Invalid user ID in token');
+      // }
+      const userId = 3; // TODO: 임시 하드코딩
 
       // 2️⃣ Payload
       const payload = { userId: userId, borrowStationName: station };

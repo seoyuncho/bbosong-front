@@ -63,6 +63,15 @@ export default function QRScanReward() {
       );
 
       setMessage(`🎉 ${storeName}에서 리워드 받기 완료!`);
+      const storeData = {
+        name: storeName,
+        address: response.data.address,
+        bubbleCount: response.data.bubbleCount,
+      };
+      console.log("Store Data:", storeData);
+
+      // 저장
+      await AsyncStorage.setItem("storeInfo", JSON.stringify(storeData));
 
       setTimeout(() => { navigation.navigate("RewardCommit" as never); }, 500);
 
@@ -194,7 +203,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   headerTitle: {
-    fontSize: wp("5%"),
+    fontSize: 18,
     left: -wp("1.5%"), // 중앙정렬을 위한 트릭
     color: "#fff",
     fontWeight: "600",
@@ -203,7 +212,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginTop: hp("15%"),
-    fontSize: wp("5%"),
+    fontSize: 16,
     textAlign: "center",
     color: "#fff",
     lineHeight: hp("3.5%"),
@@ -233,7 +242,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: wp("4.5%"),
+    fontSize: 18,
     fontWeight: "600",
   },
   messageBox: {

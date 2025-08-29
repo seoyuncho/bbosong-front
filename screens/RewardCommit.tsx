@@ -4,10 +4,30 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/Ionicons";
-import QRScreen from "./QRScreen";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RewardCommit() {
   const navigation = useNavigation();
+  const [store, setStore] = useState<any>(null);
+
+  useEffect(() => {
+    const loadStore = async () => {
+      try {
+        const saved = await AsyncStorage.getItem("storeInfo");
+        if (saved) {
+          setStore(JSON.parse(saved));
+          console.log("저장된 가게 정보:", JSON.parse(saved));
+        }
+      } catch (err) {
+        console.error("스토어 불러오기 실패:", err);
+      }
+    };
+    loadStore();
+  }, []);
+
+  
+
   return (
     <LinearGradient
       colors={['#FFFFFF', '#CDD7E4', '#A1ACD280']}
@@ -17,48 +37,38 @@ export default function RewardCommit() {
       {/* 상단 헤더 */}
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={() => navigation.navigate(QRScreen as never)}
+          onPress={() => navigation.navigate("QRScreen" as never)}
           style={styles.backButton}
         >
-          <Icon name="arrow-back" size={wp("6%")} color="#000" />
+          <Icon name="arrow-back" size={18} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerText}>리워드 받기</Text>
-        <View style={{ width: wp("6%") }} /> {/* 오른쪽 빈 공간 */}
+        <View style={{ width: wp("6%") }} />
       </View>
 
-      {/* 중앙 영역: 방문 질문 + 카드 */}
+      {/* 중앙 영역 */}
       <View style={styles.centerSection}>
-        {/* 방문 질문 및 가게 이름 */}
         <View style={styles.visitSection}>
           <Text style={styles.question}>이 가게를 방문하셨나요?</Text>
           <View style={styles.shopRow}>
-            <Icon
-              name="location-sharp"
-              size={wp("4%")}
-              color="#537BFF"
-              style={{ marginRight: wp("1%") }}
-            />
-            <Text style={styles.shopName}>동대문 삼계탕</Text>
+            <Icon name="location-sharp" size={24} color="#537BFF" />
+            <Text style={styles.shopName}>{store ? store.name : "가게 이름 불러오는 중..."}</Text>
           </View>
         </View>
 
-        {/* 카드 */}
         <View style={styles.card}>
           <View style={styles.imageBox} />
           <View style={styles.infoBox}>
-            <View style={styles.titleRow}>
-              <Text style={styles.title}>동대문 삼계탕</Text>
-            </View>
-            <Text style={styles.address}>서울 중구 세종대로 94</Text>
+            <Text style={styles.title}>{store ? store.name : "가게 이름 불러오는 중..."}</Text>
+            <Text style={styles.address}>{store ? store.address : ""}</Text>
             <Text style={styles.distance}>시청역에서 도보 4분</Text>
             <View style={styles.rewardTag}>
-              <Text style={styles.rewardText}>방문 리워드 방울이 3개 ●●●</Text>
+              <Text style={styles.rewardText}>방문 리워드 방울이 {store?.bubbleCount ?? "0"}개 ●●●</Text>
             </View>
           </View>
         </View>
       </View>
 
-      {/* 확인 버튼 */}
       <TouchableOpacity
         style={styles.confirmButton}
         onPress={() => navigation.navigate("RewardComplete" as never)}
@@ -73,15 +83,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp("5%"),
-    paddingTop: hp("2%"),
-    justifyContent: "space-between",
-    paddingBottom: hp("2%"),
+    // paddingTop: hp("2%"),
+    // justifyContent: "space-between",
+    // paddingBottom: hp("2%"),
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: hp("3%"),
+    paddingVertical: hp("7%"),
     // padding: hp("5%"),
   },
   backButton: {
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   headerText: {
-    fontSize: wp("5%"),
+    fontSize: 18,
     fontWeight: "600",
     textAlign: "center",
   },
@@ -107,14 +117,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingBottom: hp("13%"),
+    marginTop: hp("1%"),
   },
   question: {
-    fontSize: wp("4.5%"),
-    marginBottom: hp("1%"),
+    fontSize: 18,
+    // marginBottom: hp("1%"),
     textAlign: "center",
   },
   shopName: {
-    fontSize: wp("6%"),
+    fontSize: 25,
     fontWeight: "600",
     color: "#537BFF",
     textAlign: "center",
@@ -153,16 +164,16 @@ const styles = StyleSheet.create({
     marginBottom: hp("1%"),
   },
   title: {
-    fontSize: wp("4.5%"),
+    fontSize: 18,
     fontWeight: "600",
   },
   address: {
-    fontSize: wp("3.5%"),
+    fontSize: 14,
     color: "#555",
     marginBottom: hp("0.5%"),
   },
   distance: {
-    fontSize: wp("3.5%"),
+    fontSize: 14,
     color: "#537BFF",
     marginBottom: hp("1%"),
   },
@@ -174,7 +185,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("2%"),
   },
   rewardText: {
-    fontSize: wp("3%"),
+    fontSize: 12,
     color: "#537BFF",
   },
   confirmButton: {
@@ -182,11 +193,11 @@ const styles = StyleSheet.create({
     borderRadius: wp("5%"),
     paddingVertical: hp("1.5%"),
     alignItems: "center",
-    marginBottom: hp("5%"),
+    marginBottom: hp("5.5%"),
   },
   confirmText: {
     color: "#fff",
-    fontSize: wp("4.5%"),
+    fontSize: 16,
     fontWeight: "600",
   },
 });

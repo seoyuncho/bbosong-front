@@ -66,6 +66,7 @@ export default function QRScreen() {
         <TouchableOpacity 
           style={styles.card}
           onPress={() => navigation.navigate("QRScanReward" as never)}
+          // onPress={() => navigation.navigate("RewardComplete" as never) }
         >
             <View>
             <Text style={[styles.cardTitle, styles.blue]}>리워드 받기</Text>
