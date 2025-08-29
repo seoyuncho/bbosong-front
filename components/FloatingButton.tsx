@@ -9,26 +9,44 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 const FloatingButton = () => {
   const pan = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
-  const [time, setTime] = useState("");
+  const [remainingTime, setRemainingTime] = useState("");
   const [isBorrowing, setIsBorrowing] = useState(false);
   const navigation = useNavigation<any>();
 
-  // 현재 시간 갱신
+  // 남은 시간 갱신 (1분마다)
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, "0");
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      setTime(`${hours}:${minutes}`);
+    const updateRemainingTime = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem("umbrellaDB");
+        if (jsonValue) {
+          const umbrellaDB = JSON.parse(jsonValue);
+          const end = new Date(umbrellaDB.umbrella.rent_end);
+          const now = new Date();
+          let diff = end.getTime() - now.getTime();
+          if (diff <= 0) {
+            setRemainingTime("반납요망");
+          } else {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            // 시계 형식: 23:57
+            const hh = String(hours).padStart(2, "0");
+            const mm = String(minutes).padStart(2, "0");
+            setRemainingTime(`${hh}:${mm}`);
+          }
+        } else {
+          setRemainingTime("");
+        }
+      } catch (e) {
+        setRemainingTime("");
+      }
     };
-
-    updateTime();
-    const timer = setInterval(updateTime, 60000);
+    updateRemainingTime();
+    const timer = setInterval(updateRemainingTime, 60000);
     return () => clearInterval(timer);
   }, []);
 
@@ -43,10 +61,12 @@ const FloatingButton = () => {
         // const decoded: any = jwtDecode(token);
         // const userId = Number(decoded.id);
         // if (isNaN(userId)) throw new Error("Invalid user ID in token");
-        const res = await axios.get(`https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`);
+        const res = await axios.get(
+          `https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`
+        );
         const user = res.data;
         // umbrella_id가 null이 아니면 대여중
-        console.log(user)
+        console.log(user);
         setIsBorrowing(user.umbrella_id !== null);
       } catch (err) {
         console.error("대여 상태 확인 실패:", err);
@@ -54,7 +74,7 @@ const FloatingButton = () => {
     };
 
     fetchBorrowStatus();
-  },);
+  });
 
   // 드래그 핸들러
   const panResponder = useRef(
@@ -88,7 +108,7 @@ const FloatingButton = () => {
           style={styles.gradient}
         >
           <Text style={styles.text1}>대여중</Text>
-          <Text style={styles.text}>{time}</Text>
+          <Text style={styles.text}>{remainingTime}</Text>
         </LinearGradient>
       </Pressable>
     </Animated.View>

@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export default function QRReturnCommit() {
   const navigation = useNavigation();
-  const [stationName, setStationName] = useState('');
+  const [stationName, setStationName] = useState("");
   const [rentStart, setRentStart] = useState<Date | null>(null);
   const [rentEnd, setRentEnd] = useState<Date | null>(null);
-  const [usedTime, setUsedTime] = useState('');
-  const [remainingTime, setRemainingTime] = useState('');
-  const [returnTimeText, setReturnTimeText] = useState('')
+  const [usedTime, setUsedTime] = useState("");
+  const [remainingTime, setRemainingTime] = useState("");
+  const [returnTimeText, setReturnTimeText] = useState("");
 
   useEffect(() => {
     const fetchUmbrellaInfo = async () => {
       try {
-          const getUmbrellaDB = async () => {
+        const getUmbrellaDB = async () => {
           try {
             const jsonValue = await AsyncStorage.getItem("umbrellaDB");
             if (jsonValue !== null) {
@@ -34,7 +37,7 @@ export default function QRReturnCommit() {
             return null;
           }
         };
-
+        console.log("umbrellaDB 가져오기 시도");
         const umbrella = await getUmbrellaDB();
 
         if (umbrella) {
@@ -49,7 +52,7 @@ export default function QRReturnCommit() {
           );
 
           const usedTime = `${usedHours}시간 ${usedMinutes}분`;
-          
+
           // 사용시간 계산
           setUsedTime(usedTime);
           const totalMs = 24 * 60 * 60 * 1000;
@@ -77,7 +80,6 @@ export default function QRReturnCommit() {
           setReturnTimeText(
             `${dayText} ${ampm} ${displayHour}시 ${displayMinutes}분까지`
           );
-  
         } // <- if (umbrella) 닫힘
       } catch (err) {
         console.warn("fetchUmbrellaInfo error:", err);
@@ -88,14 +90,16 @@ export default function QRReturnCommit() {
 
   return (
     <LinearGradient
-      colors={['#FFFFFF', '#CDD7E4', '#A1ACD280']}
+      colors={["#FFFFFF", "#CDD7E4", "#A1ACD280"]}
       locations={[0, 0.5, 1]}
       style={styles.container}
     >
       <View style={styles.container}>
         {/* 헤더 */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.navigate("Main" as never)}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Main" as never)}
+          >
             <Icon name="arrow-back" size={wp("6%")} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>대여정보</Text>
@@ -122,7 +126,7 @@ export default function QRReturnCommit() {
             </Text>
             <Text style={styles.infoText}>
               반납시간: <Text style={styles.highlight}>{returnTimeText}</Text>
-              </Text>
+            </Text>
           </View>
         </View>
 
@@ -162,9 +166,9 @@ const styles = StyleSheet.create({
     marginVertical: hp("2%"), // 위아래 여백 살짝만
   },
   image: {
-    width: wp("70%"),   // 화면 너비의 70% 정도
-    height: hp("50%"),  // 비율 자동 유지
-    aspectRatio: 1,     // 정사각형 비율 유지
+    width: wp("70%"), // 화면 너비의 70% 정도
+    height: hp("50%"), // 비율 자동 유지
+    aspectRatio: 1, // 정사각형 비율 유지
     resizeMode: "contain",
   },
   infoBox: {

@@ -12,9 +12,12 @@ import Weather from "../components/Weather";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Bubble from "./src/bubble.svg";
 
 const MainScreen = ({ navigation }: any) => {
   const [showButton, setShowButton] = useState(false);
+  const [username, setUsername] = useState("김뽀송");
+  const [bubbleCount, setBubbleCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchUmbrellaStatus = async () => {
@@ -29,7 +32,11 @@ const MainScreen = ({ navigation }: any) => {
           `https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`
         );
 
-        console.log("마이페이지 데이터:", res.data);
+        // 유저 이름 세팅
+
+        setUsername(res.data.name || "김뽀송");
+        setBubbleCount(res.data.bubbleCount || 0);
+
         // ✅ 캐시 삭제 + 로그 확인
         const clearUmbrellaDB = async () => {
           try {
@@ -47,7 +54,7 @@ const MainScreen = ({ navigation }: any) => {
         // umbrella_id 확인
         if (res.data.umbrellaId == null) {
           setShowButton(false);
-          clearUmbrellaDB();          
+          clearUmbrellaDB();
         } else {
           setShowButton(true);
         }
@@ -123,16 +130,45 @@ const MainScreen = ({ navigation }: any) => {
           }}
         >
           <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-          <Ellipse width={64} height={64} />
-          <View style={{ padding: 10, marginLeft: 4 }}>
-            <Text style={{ fontSize: 16, fontWeight: "600", color: "#537BFF" }}>
-              김뽀송<Text style={{ fontSize: 16, fontWeight: "600", color: "#000000" }}> 님</Text>
-            </Text>
-            <Text>리워드 내용</Text>
-          </View>
+            <View style={{ backgroundColor: "#FFFFFF", borderRadius: 32 }}>
+              <Image source={require("./src/user.png")} style={{ width: 64, height: 64, borderRadius: 32 }} />
+            </View>
+            <View
+              style={{ padding: 4, marginLeft: 10, flexDirection: "column", gap: 4 }}
+            >
+              <>
+                <Text style={{ fontSize: 16, fontWeight: "600", color: "#537BFF" }}>
+                  {username}
+                  <Text style={{
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color: "#000000",
+                    }}>
+                    {" "}
+                    님
+                  </Text>
+                </Text>
+              </>
+              <>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "600",
+                    color: "#537BFF",
+                    marginTop: 2,
+                    alignContent: "center",
+                  }}
+                ><Bubble />
+                    {" "} 방울 {bubbleCount}개
+                </Text>
+              </>
+            </View>
           </View>
           <View>
-            <TouchableOpacity style={{ borderRadius: 20, backgroundColor: "#FFFFFF"}} onPress={() => navigation.navigate("QRScanReward" as never)}>
+            <TouchableOpacity
+              style={{ borderRadius: 20, backgroundColor: "#FFFFFF" }}
+              onPress={() => navigation.navigate("QRScanReward" as never)}
+            >
               <Reward />
             </TouchableOpacity>
           </View>
