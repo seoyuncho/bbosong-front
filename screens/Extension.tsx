@@ -2,12 +2,77 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
 import Bubble from "./src/bubble.svg";
 import Question from "./src/question.svg";
 
 const Extension = ({ navigation }: any) => {
+  const [rentStart, setRentStart] = useState<string | null>(null);
+  const [rentEnd, setRentEnd] = useState<string | null>(null);
+
+  const [reward, setReward] = useState(0);
+
+  useEffect(() => {
+    const fetchUmbrellaInfo = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return;
+
+        // const decoded: any = jwtDecode(token);
+        // const userId = Number(decoded.id);
+        // if (isNaN(userId)) throw new Error("Invalid user ID in token");
+        const userId = 3;
+
+        // API 호출
+        const res = await axios.get(
+          `https://bbosong-back-production.up.railway.app/user-qr/my-umbrella?userId=${userId}`
+        );
+        const umbrella = res.data.umbrella;
+        console.log("umbrella:", umbrella);
+
+        // 화면 컴포넌트 안 위쪽에 함수 추가
+        const formatDate = (date: Date): string => {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+
+          let hours = date.getHours();
+          const minutes = String(date.getMinutes()).padStart(2, "0");
+
+          const ampm = hours < 12 ? "오전" : "오후";
+          hours = hours % 12 || 12; // 0시는 12로 표시
+
+          return `${year}.${month}.${day} ${ampm} ${hours}:${minutes}`;
+        };
+
+        if (umbrella) {
+
+          const start = new Date(umbrella.rent_start);
+          const end = new Date(umbrella.rent_end);
+
+          setRentStart(formatDate(start));
+          end.setTime(end.getTime() + 24 * 60 * 60 * 1000);
+          setRentEnd(formatDate(end));
+                    
+        } // <- if (umbrella) 닫힘
+
+        const res_user = await axios.get(
+          `https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`
+        );
+        const userInfo = res_user.data;
+        console.log("userInfo:", userInfo);
+
+        setReward(userInfo.bubbleCount || 0);
+
+      } catch (err) {
+        console.warn("fetchUmbrellaInfo error:", err);
+      }
+    };
+    fetchUmbrellaInfo();
+  }, []);
+
   return (
     <LinearGradient
       colors={["#FFFFFF", "#CDD7E4", "#A1ACD280"]}
@@ -34,7 +99,7 @@ const Extension = ({ navigation }: any) => {
               보유 중 비눗방울
             </Text>
             <Bubble />
-            <Text style={{ fontSize: 16, fontWeight: "bold", color: "#537BFF" }}>6개</Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "#537BFF" }}>{reward}개</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 4, padding: 5 }}>
             <Question />
@@ -48,14 +113,14 @@ const Extension = ({ navigation }: any) => {
             대여 연장 전
           </Text>
           <Text style={{ fontSize: 12, color: "#999999", padding: 5 }}>
-            반납 시간: 2025.08.18. 오전 9:41
+            반납 시간: {rentStart}
           </Text>
           <View style={{ height: 1, backgroundColor: "#eee", marginVertical: 16, width: "100%" }} />
           <Text style={{ fontWeight: "bold", fontSize: 16, padding: 5 }}>
             대여 연장 후
           </Text>
           <Text style={{ fontSize: 12, color: "#999999", padding: 5 }}>
-            반납 시간: 2025.08.19. 오전 9:41
+            반납 시간: {rentEnd}
           </Text>
         </View>
         <View style={styles.bubbles}>

@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }: any) => {
   });
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const API_URL = 'http://192.168.0.96:3000';
+  const API_URL = 'https://bbosong-back-production.up.railway.app:3000';
 
   const handleNext = () => {
     setStep(step + 1);

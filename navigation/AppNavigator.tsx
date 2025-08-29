@@ -6,6 +6,7 @@ import QRScreen from '../screens/QRScreen';
 
 import QRScanBorrow from '../screens/QRScanBorrow';
 import QRBorrowCommit from '../screens/QRBorrowCommit';
+import QRBorrowPay from '../screens/QRBorrowPay';
 import QRBorrowComplete from '../screens/QRBorrowComplete';
 import QRBorrowRecommend from '../screens/QRBorrowRecommend';
 
@@ -39,6 +40,7 @@ export default function AppNavigator() {
       <Stack.Screen name="MyPage" component={MyPageScreen} />
       <Stack.Screen name="QRScanBorrow" component={QRScanBorrow} />
       <Stack.Screen name="QRBorrowCommit" component={QRBorrowCommit} />
+      <Stack.Screen name="QRBorrowPay" component={QRBorrowPay} />
       <Stack.Screen name="QRBorrowComplete" component={QRBorrowComplete} />
       <Stack.Screen name="QRBorrowRecommend" component={QRBorrowRecommend} />
 

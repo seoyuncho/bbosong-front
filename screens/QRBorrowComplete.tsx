@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import axios from 'axios';
 
@@ -14,13 +15,25 @@ export default function QRBorrowComplete() {
   useEffect(() => {
     const fetchUmbrellaInfo = async () => {
       try {
-        const umbrellaId = await AsyncStorage.getItem("umbrella_id");
-        console.log("umbrellaId from storage:", umbrellaId);
-        if (!umbrellaId) return;
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return;
 
-        const response = await axios.get(`http://10.84.59.115:3000/qr-scan/umbrella/${umbrellaId}`);
-        const umbrella = response.data.umbrella;
-        setRentEnd(new Date(umbrella.rent_end));
+        // const decoded: any = jwtDecode(token);
+        // const userId = Number(decoded.id);
+        // if (isNaN(userId)) throw new Error("Invalid user ID in token");
+        const userId = 3;
+
+        // API 호출
+        const res = await axios.get(
+          `https://bbosong-back-production.up.railway.app/user-qr/my-umbrella?userId=${userId}`
+        );
+        const umbrella = res.data.umbrella;
+        console.log("umbrella:", umbrella);
+
+        if (umbrella) {
+          const end = new Date(umbrella.rent_end);
+          setRentEnd(end);
+        }
       } catch (err) {
         console.warn("Failed to fetch umbrella info", err);
       }
@@ -58,25 +71,22 @@ export default function QRBorrowComplete() {
       {/* 메인 콘텐츠 */}
       <View style={styles.content}>
         {/* 결제 완료 텍스트 */}
-        <Text style={styles.depositText}>
-          보증금 <Text style={{ fontWeight: '600' }}>20,000원</Text> 결제 완료
+        <Text style={styles.stationText}>
+          보증금 20,000원 결제 완료
         </Text>
-
         {/* 완료 메시지 */}
-        <Text style={styles.mainText}>우산 대여가 완료되었어요.</Text>
+        <Text style={styles.completeText}>우산 대여가 완료되었어요.</Text>
 
         {/* 체크 아이콘 */}
         <View style={styles.checkCircle}>
           <Ionicons name="checkmark-sharp" size={100} color="white" />
         </View>
-
-        {/* 대여/반납 시간 */}
-        <View style={styles.timeInfo}>
-          <Text style={styles.timeText}>
-            대여 시간: <Text style={styles.timeHighlight}>하루 (24시간)</Text>
+        <View style={{ alignItems: "flex-start"}}>
+          <Text style={styles.infoText}>
+            대여 시간: <Text style={styles.highlight}>하루 (24시간)</Text>
           </Text>
-          <Text style={styles.timeText}>
-            반납 시간: <Text style={styles.timeHighlight}>{rentEndString}까지</Text>
+          <Text style={styles.infoText}>
+            반납 시간: <Text style={styles.highlight}>{rentEndString}까지</Text>
           </Text>
         </View>
 
@@ -99,20 +109,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp("5%"),
-    paddingTop: hp("2%"),
-    justifyContent: "space-between",
-    paddingBottom: hp("2%"),
+    // paddingTop: hp("2%"),
+    // justifyContent: "space-between",
+    // paddingBottom: hp("2%"),
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: hp("5%"),
     justifyContent: "space-between",
+    paddingTop: hp("7%"),
   },
   headerTitle: {
-    fontSize: wp("5%"),
+    fontSize: 18,
     fontWeight: "600",
-    color: "#111",
+    textAlign: "center",
+  },
+  stationText: {
+    textAlign: "center",
+    fontSize: 18,
+    color: "#537BFF",
+    fontWeight: "600",
+    marginBottom: hp("1%"),
   },
   content: {
     flex: 1,
@@ -120,18 +137,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingTop: hp("5%"),
   },
-  depositText: {
-    fontSize: wp("4.5%"),
-    color: "#111",
-    marginBottom: hp("2%"),
-    textAlign: "center",
-  },
-  mainText: {
-    fontSize: wp("6%"),
+  completeText: {
+    fontSize: 22,
     fontWeight: "600",
-    color: "#111",
-    textAlign: "center",
     marginBottom: hp("4%"),
+    textAlign: "center",
   },
   checkCircle: {
     width: wp("40%"),
@@ -140,36 +150,33 @@ const styles = StyleSheet.create({
     backgroundColor: "#A1ACF2",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: hp("5%"),
-    marginBottom: hp("5%"),
+    marginTop: hp("10%"),
+    marginBottom: hp("10%"),
   },
-  timeInfo: {
-    alignItems: "center",
-    marginBottom: hp("3%"),
-  },
-  timeText: {
-    fontSize: wp("5%"),
-    fontWeight: "600",
-    color: "#111",
+  infoText: {
+    fontSize: 18,
+    // textAlign: "left",        // ← 왼쪽 정렬
+    // width: wp("80%"), 
     marginBottom: hp("1%"),
-  },
-  timeHighlight: {
-    color: "#537BFF",
     fontWeight: "600",
+  },
+  highlight: {
+    fontWeight: "bold",
+    color: "#537BFF",
   },
   noticeText: {
-    fontSize: wp("4.5%"),
-    textAlign: "center",
+    fontSize: 16,
     color: "#343434",
-    opacity: 0.7,
-    lineHeight: hp("3%"),
+    opacity: 0.67,
+    textAlign: "center",
+    marginTop: hp("2%"),
   },
   button: {
     backgroundColor: "#537BFF",
     borderRadius: wp("5%"),
     paddingVertical: hp("1.5%"),
     alignItems: "center",
-    marginBottom: hp("7%"),
+    marginBottom: hp("5.5%"),
   },
   buttonText: {
     color: "#fff",
@@ -177,5 +184,3 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
-
-
