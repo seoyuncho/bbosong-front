@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,88 +9,110 @@ import {
 } from "react-native";
 import axios from "axios";
 import { NaverMapMarkerOverlay } from "@mj-studio/react-native-naver-map";
-import Arrow from "./src/arrow.svg";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import getDbMarkerImage from "./MapMarkers";
 
 // 백엔드 API URL
-const API_URL = "http://192.168.50.216:3000";
+const API_URL = "https://bbosong-back-production.up.railway.app";
 
 import { Marker } from "../data/sampleMarkers";
-type PlaceSearchProps = {
+export interface PlaceSearchProps {
   mapRef: any;
   onStoresFetched: (markers: Marker[]) => void;
-};
+  place?: string;
+}
 
 const PlaceSearch = ({
   mapRef,
   onStoresFetched,
+  place,
 }: PlaceSearchProps): React.JSX.Element => {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchMarker, setSearchMarker] = useState<any>(null);
   const navigation = useNavigation<any>();
 
-  // 네이버 오픈 API를 호출하는 함수
-  const handleSearch = async () => {
-    if (!query) {
+  useEffect(() => {
+    if (place) {
+      setQuery(place);
+      handleSearch(place);
+    }
+  }, [place]);
+
+  // 외부(네이버 등) 검색만 수행, FlatList에 결과 표시
+  const handleSearch = async (searchQuery?: string) => {
+    const q = searchQuery ?? query;
+    if (!q) {
       setSearchResults([]);
-      onStoresFetched([]); // 검색어 없으면 전체 마커로 복구
+      onStoresFetched([]);
       return;
     }
     try {
       const response = await axios.post(`${API_URL}/search-place`, {
-        placeName: query,
+        placeName: q,
       });
+      console.log("검색 결과:", response.data.places);
       setSearchResults(response.data.places);
-
-      // 검색 결과를 markers로 가공해서 지도에 표시
       if (response.data.places && response.data.places.length > 0) {
-        const markers: Marker[] = response.data.places.map(
-          (place: any, idx: number) => {
-            const cleanedTitle = place.title.replace(/<[^>]*>/g, "");
-            const latitude = place.mapy / 1e7;
-            const longitude = place.mapx / 1e7;
-            return {
-              id: `search-result-${idx}`,
-              latitude,
-              longitude,
-              caption: cleanedTitle,
-              subCaption: place.address || "",
-              description: "",
-              image: undefined,
-              store: undefined,
-            };
-          }
-        );
-        onStoresFetched(markers);
+        setSearchResults(response.data.places);
       } else {
-        onStoresFetched([]); // 검색 결과 없으면 전체 마커로 복구
+        setSearchResults([]);
       }
     } catch (error) {
-      console.error("Error searching for place:", error);
-      onStoresFetched([]); // 에러 시 전체 마커로 복구
+      onStoresFetched([]);
     }
   };
 
-  // 검색 결과 아이템을 선택했을 때 실행되는 함수
-  const handlePlaceSelection = (place: any, idx: number) => {
+  // FlatList에서 아이템 선택 시: DB 우선 확인, 있으면 DB 정보, 없으면 외부 정보로 마커 표시
+  const handlePlaceSelection = async (place: any, idx: number) => {
+    // 외부 검색 결과에서 선택된 데이터
     const cleanedTitle = place.title.replace(/<[^>]*>/g, "");
-    setQuery(cleanedTitle); // 검색창에 선택한 장소명 표시
-    setSearchResults([]); // 검색 결과 목록 숨기기
+    setQuery(cleanedTitle);
+    setSearchResults([]);
 
+    // 1. 우리 DB에 있는지 확인 (부분 일치)
+    try {
+      const dbRes = await axios.get(
+        `${API_URL}/store/search?name=${encodeURIComponent(cleanedTitle)}`
+      );
+      if (dbRes.data && dbRes.data.length > 0) {
+        // DB에 있음: 첫 번째 결과로 마커 생성 및 카테고리별 마커 적용
+        const dbPlace = dbRes.data[0];
+        const marker: Marker = {
+          id: `db-result-${dbPlace.id}`,
+          latitude: dbPlace.latitude,
+          longitude: dbPlace.longitude,
+          caption: dbPlace.name,
+          subCaption: dbPlace.address || "",
+          description: dbPlace.category || "",
+          image: { symbol: "black" }, // 타입 에러 방지용, 실제 이미지는 MapMarkers에서 결정
+          store: dbPlace,
+        };
+        mapRef.current?.animateCameraTo({
+          latitude: dbPlace.latitude,
+          longitude: dbPlace.longitude,
+          zoom: 15,
+          duration: 1000,
+          easing: "EaseOut",
+        });
+        onStoresFetched([marker]);
+        return;
+      }
+    } catch (e) {
+      // DB 조회 에러는 무시하고 외부 정보로 진행
+    }
+    // 2. DB에 없으면 외부 정보로 마커 생성
     if (place && place.mapy && place.mapx) {
       const latitude = place.mapy / 1e7;
       const longitude = place.mapx / 1e7;
       mapRef.current?.animateCameraTo({
         latitude,
         longitude,
-        zoom: 20,
+        zoom: 15,
         duration: 1000,
         easing: "EaseOut",
       });
-
-      // 선택한 장소만 markers로 표시
       onStoresFetched([
         {
           id: `search-result-${idx}`,
@@ -136,17 +158,23 @@ const PlaceSearch = ({
         >
           <Ionicons name="arrow-back" size={24} color="#000" />
         </TouchableOpacity>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="지역명, 가게명 검색"
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={handleSearch}
-
-        />
-        <TouchableOpacity onPress={handleSearch} style={styles.searchButton}>
-          <Text style={styles.searchButtonText}>검색</Text>
-        </TouchableOpacity>
+        <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+          <TextInput
+            style={[styles.searchInput, { flex: 1 }]}
+            placeholder="지역명, 가게명 검색"
+            value={query}
+            onChangeText={setQuery}
+            onSubmitEditing={() => handleSearch()}
+            onBlur={() => handleSearch()}
+            returnKeyType="search"
+          />
+          <Ionicons
+            name="search"
+            size={22}
+            color="#00000"
+            style={{ marginRight: 12 }}
+          />
+        </View>
       </View>
 
       {searchResults.length > 0 && (
@@ -201,15 +229,7 @@ const styles = StyleSheet.create({
     padding: 12,
     textAlign: "center",
   },
-  searchButton: {
-    padding: 12,
-    justifyContent: "center",
-    borderLeftWidth: 1,
-    borderColor: "#eee",
-  },
-  searchButtonText: {
-    fontWeight: "bold",
-  },
+  // searchButton, searchButtonText 제거
   resultsListContainer: {
     marginTop: 45,
     maxHeight: 400,

@@ -4,9 +4,50 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
 
 export default function QRReturnReward() {
   const navigation = useNavigation();
+  const [username, setUsername] = useState("뽀송님");
+  const [distance, setDistance] = useState(0);
+  const [totalRent, setTotalRent] = useState(0);
+  const [drops, setDrops] = useState(0);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const userId = 3; // 예시: 실제로는 AsyncStorage 토큰 등에서 가져오기
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return;
+
+        // const decoded: any = jwtDecode(token);
+        // const userId = Number(decoded.id);
+        // if (isNaN(userId)) throw new Error("Invalid user ID in token");
+        const res = await axios.get(`https://bbosong-back-production.up.railway.app/mypage?userId=${userId}`);
+        const user = res.data;
+        console.log("user:", user);
+
+        // 이름 세 글자인 경우 성 제거
+        let name = user.name || "뽀송님";
+        if (name.length === 3) {
+          name = name.slice(1) + "님";
+        }
+
+        setUsername(name);
+        setDistance(user.travelDistance ? Number(user.travelDistance.toFixed(2)) : 0);
+        setTotalRent(user.rentCount || 0);
+        setDrops(user.bubbleCount || 0);
+
+      } catch (err) {
+        console.warn("유저 정보 불러오기 실패:", err);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   return (
     <LinearGradient
@@ -21,13 +62,13 @@ export default function QRReturnReward() {
           >
           <Icon name="arrow-back" size={wp("6%")} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>뽀송이 대여</Text>
+        <Text style={styles.headerTitle}>뽀송이 반납</Text>
         <View style={{ width: wp("5%") }} />
       </View>
 
       {/* 메인 콘텐츠 */}
       <View style={styles.content}>
-        <Text style={styles.username}>뽀송님은</Text>
+        <Text style={styles.username}>{username}은</Text>
         <Text style={styles.message}>지금까지 사과만큼 탄소를 줄였어요!</Text>
 
         <Image
@@ -38,13 +79,13 @@ export default function QRReturnReward() {
 
         <View style={styles.stats}>
           <Text style={styles.statText}>
-            이동한 거리: <Text style={styles.statValue}>10 km</Text>
+            이동한 거리: <Text style={styles.statValue}>{distance} km</Text>
           </Text>
           <Text style={styles.statText}>
-            총 대여 횟수: <Text style={styles.statValue}>8회</Text>
+            총 대여 횟수: <Text style={styles.statValue}>{totalRent}회</Text>
           </Text>
           <Text style={styles.statText}>
-            방울이: <Text style={styles.statValue}>1개</Text>
+            방울이: <Text style={styles.statValue}>{drops}개</Text>
           </Text>
         </View>
 
@@ -67,18 +108,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp("5%"),
-    paddingTop: hp("2%"),
-    justifyContent: "space-between",
-    paddingBottom: hp("2%"),
+    // paddingTop: hp("2%"),
+    // justifyContent: "space-between",
+    // paddingBottom: hp("2%"),
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: hp("5%"),
+    paddingTop: hp("7%"),
     justifyContent: "space-between",
   },
   headerTitle: {
-    fontSize: wp("5%"),
+    fontSize: 18,
     fontWeight: "600",
   },
   content: {
@@ -88,13 +129,13 @@ const styles = StyleSheet.create({
     paddingBottom: hp("7%"),
   },
   username: {
-    fontSize: wp("4.5%"),
+    fontSize: 18,
     color: "#537BFF",
     fontWeight: "600",
     marginBottom: hp("1%"),
   },
   message: {
-    fontSize: wp("5.5%"),
+    fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
   },
@@ -110,15 +151,16 @@ const styles = StyleSheet.create({
     paddingBottom: hp("2%"),
   },
   statText: {
-    fontSize: wp("5%"),
+    fontSize: 18,
     marginVertical: hp("0.5%"),
+    fontWeight: "600",
   },
   statValue: {
     color: "#537BFF",
     fontWeight: "bold",
   },
   subMessage: {
-    fontSize: wp("4.5%"),
+    fontSize: 18,
     color: '#343434',
     opacity: 0.67,
     textAlign: "center",
@@ -129,7 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: wp("5%"),
     paddingVertical: hp("1.5%"),
     alignItems: "center",
-    marginBottom: hp("7%"),
+    marginBottom: hp("5.5%"),
   },
   buttonText: {
     color: "#fff",

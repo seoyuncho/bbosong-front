@@ -18,9 +18,6 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-import QRScreen from "./QRScreen";
-
 export default function QRScanReward() {
   const [message, setMessage] = useState<string>("");
   const [scanned, setScanned] = useState(false);
@@ -61,7 +58,7 @@ export default function QRScanReward() {
       const payload = { userId, storeName };
 
       const response = await axios.post(
-        "http://192.168.50.216:3000/user-qr/redeem-bubble",
+        "https://bbosong-back-production.up.railway.app/user-qr/redeem-bubble",
         payload
       );
 

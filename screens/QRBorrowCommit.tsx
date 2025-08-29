@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import axios from 'axios';
@@ -16,14 +17,35 @@ export default function QRBorrowCommit() {
   useEffect(() => {
     const fetchUmbrellaInfo = async () => {
       try {
-        const umbrellaId = await AsyncStorage.getItem('umbrella_id');
-        if (!umbrellaId) return;
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return;
 
-        const response = await axios.get(`http://10.84.59.115:3000/qr-scan/umbrella/12`);
-        console.log("borrow response:", response.data);
-        const umbrella = response.data.umbrella;
-        setStationName(umbrella.station.name);
-        setRentEnd(new Date(umbrella.rent_end));
+        // const decoded: any = jwtDecode(token);
+        // const userId = Number(decoded.id);
+        // if (isNaN(userId)) throw new Error("Invalid user ID in token");
+        const userId = 3;
+
+        // API 호출
+        const res = await axios.get(
+          `https://bbosong-back-production.up.railway.app/user-qr/my-umbrella?userId=${userId}`
+        );
+        const umbrella = res.data.umbrella;
+        console.log("umbrella:", umbrella);
+
+        if (umbrella) {
+          // ✅ station_borrow_id → station_name 조회
+          const stationRes = await axios.get(
+            `https://bbosong-back-production.up.railway.app/user-qr/station-name?stationId=${umbrella.station_borrow_id}`
+          );
+
+          setStationName(stationRes.data.stationName);
+
+          // ❌ 여기서 또 setStationName(umbrella.station.name); 쓰면 station 없을 때 에러 → 제거 추천
+          // setStationName(umbrella.station.name);
+
+          const end = new Date(umbrella.rent_end);
+          setRentEnd(end);
+        }
       } catch (err) {
         console.warn('Failed to fetch umbrella info', err);
       }
@@ -45,27 +67,28 @@ export default function QRBorrowCommit() {
     >
       {/* 상단 네비게이션 */}
       <View style={styles.header}>
-        <TouchableOpacity  
-          onPress={() => navigation.navigate("QRScreen" as never)}
-        >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={wp("6%")} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>뽀송이 대여</Text>
+        <View style={{ width: wp("6%") }} />
       </View>
 
-      {/* 텍스트 */}
+      <View style={styles.content}>
+        {/* 텍스트 */}
       <Text style={styles.subTitle}>
-        뽀송이 <Text style={styles.code}>스테이션 {stationName}</Text>
+        뽀송이 스테이션 {stationName}
       </Text>
       <Text style={styles.title}>우산을 대여하시겠습니까?</Text>
-
-      <View style={{ width: '90%', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
-        <Image
-          source={require('../assets/umbrella_borrow.png')}
-          style={styles.image}
-          resizeMode="contain"
-        />
-        <View style={styles.infoBoxOverlay}>
+        {/* 이미지 */}
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../assets/umbrella_borrow.png")}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={styles.infoBox}>
           <Text style={styles.infoText}>
             대여 시간: <Text style={styles.highlight}>하루 (24시간)</Text>
           </Text>
@@ -78,7 +101,7 @@ export default function QRBorrowCommit() {
       {/* 하단 버튼 */}
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => navigation.navigate("QRBorrowComplete" as never)}
+        onPress={() => navigation.navigate("QRBorrowPay" as never)}
       >
         <Text style={styles.buttonText}>확인</Text>
       </TouchableOpacity>
@@ -89,69 +112,70 @@ export default function QRBorrowCommit() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: wp("5%"),
-    paddingTop: hp("2%"),
-    justifyContent: "space-between",
-    paddingBottom: hp("2%"),
+    paddingHorizontal: wp("2%"),
+    // paddingTop: hp("2%"),
+    // paddingBottom: hp("2%"),
+    // justifyContent: "space-between", // 위-중앙-아래 배치
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
+  },
+  imageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: hp("2%"), // 위아래 여백 살짝만
+  },
+  image: {
+    width: wp("70%"),   // 화면 너비의 70% 정도
+    height: hp("50%"),  // 비율 자동 유지
+    aspectRatio: 1,     // 정사각형 비율 유지
+    resizeMode: "contain",
+  },
+  infoBox: {
+    marginTop: hp("1%"),
+    // alignItems: "center",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: hp("5%"),
     justifyContent: "space-between",
-    width: "100%",
+    paddingTop: hp("7%"),
+    // paddingBottom: hp("2%"),
   },
   headerTitle: {
-    fontSize: wp("5%"),
+    fontSize: 18, // 요청하신 글씨 크기
     fontWeight: "600",
-    color: "#111",
-    textAlign: "center",
-    flex: 1,
   },
   subTitle: {
-    fontSize: wp("4.5%"),
-    color: "#537BFF",
-    marginTop: hp("5%"),
-    fontWeight: "600",
     textAlign: "center",
-  },
-  code: {
+    fontSize: 18,
+    color: "#537BFF",
     fontWeight: "600",
   },
   title: {
-    fontSize: wp("6%"),
+    textAlign: "center",
+    fontSize: 22,
     fontWeight: "600",
     color: "#111",
     marginTop: hp("1%"),
-    textAlign: "center",
-  },
-  image: {
-    width: wp("90%"),
-    height: hp("50%"),
-    resizeMode: "contain",
-    marginTop: hp("3%"),
-  },
-  infoBoxOverlay: {
-    position: "absolute",
-    bottom: hp("12%"),
-    alignItems: "center",
-    width: "100%",
   },
   infoText: {
-    fontSize: wp("5%"),
+    fontSize: 18,
     fontWeight: "600",
-    color: "#111",
-    marginBottom: hp("1%"),
+    color: "#111111",
+    marginTop: hp("1%"),
+    textAlign: "center",
   },
   highlight: {
     color: "#537BFF",
-    fontWeight: "600",
   },
   subInfo: {
-    fontSize: wp("4%"),
+    marginTop: hp("1%"),
+    fontSize: 16,
     color: "#343434",
-    opacity: 0.7,
+    opacity: 0.67,
     textAlign: "center",
   },
   button: {
@@ -159,8 +183,7 @@ const styles = StyleSheet.create({
     borderRadius: wp("5%"),
     paddingVertical: hp("1.5%"),
     alignItems: "center",
-    marginBottom: hp("5%"),
-    width: "90%",
+    marginBottom: hp("5.5%"),
   },
   buttonText: {
     color: "#fff",

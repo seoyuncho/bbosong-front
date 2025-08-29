@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: wp("5%"),
     paddingVertical: hp("1.5%"),
     alignItems: "center",
-    marginBottom: hp("7%"),
+     marginBottom: hp("2.5%"),
   },
   buttonText: {
     color: "#fff",

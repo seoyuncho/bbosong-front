@@ -1,20 +1,22 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from 'expo-linear-gradient';
-
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function QRBorrowRecommend() {
   const navigation = useNavigation();
 
   return (
     <LinearGradient
-          colors={['#FFFFFF', '#CDD7E4', '#A1ACD280']}
-          locations={[0, 0.5, 1]}
-          style={styles.container}
-      >
+      colors={["#FFFFFF", "#CDD7E4", "#A1ACD280"]}
+      locations={[0, 0.5, 1]}
+      style={styles.container}
+    >
       <Text style={styles.smallText}>오늘 같은 날 이런건 어떠신가요?</Text>
       <Text style={styles.title}>오늘 같이 더운 날엔 치맥이지!</Text>
 
@@ -27,18 +29,24 @@ export default function QRBorrowRecommend() {
       {/* 위치 표시 (아이콘 + 텍스트) */}
       <View style={styles.locationRow}>
         <Icon name="location-sharp" size={18} color="#537BFF" />
-        <Text style={styles.locationText}>교촌 치킨 서울 시청역점</Text>
+        <Text style={styles.locationText}>교촌치킨 서울시청점</Text>
       </View>
 
       <Text style={styles.desc}>사장님이 뽀송님을 애타게 기다리고 있어요.</Text>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity 
-          style={styles.closeBtn} 
-          onPress={() => navigation.navigate("Main" as never)}>
+        <TouchableOpacity
+          style={styles.closeBtn}
+          onPress={() => navigation.navigate("Main" as never)}
+        >
           <Text style={styles.closeText}>닫기</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.mapBtn}>
+        <TouchableOpacity
+          style={styles.mapBtn}
+          onPress={() => {
+            (navigation as any).navigate("Map", { place: "교촌치킨 서울시청점" });
+          }}
+        >
           <Text style={styles.mapText}>지도에서 보기</Text>
         </TouchableOpacity>
       </View>
@@ -67,8 +75,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   image: {
-    width: wp("70%"),   // 기존보다 크게
-    height: hp("50%"),  // 화면 세로의 50% 차지
+    width: wp("70%"), // 기존보다 크게
+    height: hp("50%"), // 화면 세로의 50% 차지
     marginVertical: hp("3%"),
     resizeMode: "contain",
   },
