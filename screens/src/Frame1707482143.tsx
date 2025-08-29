@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     aspectRatio: 16 / 10,
     justifyContent: "space-between",
     paddingHorizontal: 14,
-    paddingVertical: 50,
+    paddingVertical: 30,
     gap: 0,
     flexDirection: "row",
     borderRadius: 33,

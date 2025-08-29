@@ -129,6 +129,7 @@ export default function QRReturnCommit() {
         {/* 버튼 */}
         <TouchableOpacity
           style={styles.button2}
+          onPress={() => navigation.navigate("QRScanReturn" as never)}
         >
           <Text style={styles.buttonText}>반납하기</Text>
         </TouchableOpacity>

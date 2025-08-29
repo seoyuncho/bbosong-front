@@ -65,7 +65,6 @@ const LoginScreen = ({ navigation }: any) => {
           
           console.log('로그인 버튼 클릭됨');
           handleLogin();
-          navigation.navigate('Main');
         }}
       >
         <Text style={styles.buttonText}>로그인</Text>

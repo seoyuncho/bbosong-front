@@ -61,7 +61,7 @@ const Weather = () => {
       />
       <Text style={[{ color: "#999" }, styles.textTypo]}>오늘 날씨</Text>
       <Text style={[{ color: "#537bff" }, styles.textTypo]}>
-        { weather.weather }
+        { weather.description }
       </Text>
     </View>
   );
