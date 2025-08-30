@@ -187,7 +187,7 @@ const MainScreen = ({ navigation }: any) => {
           <Text
             style={{ color: "#fff", fontWeight: "600", textAlign: "center" }}
           >
-            내정보
+            내 정보
           </Text>
         </TouchableOpacity>
       </View>

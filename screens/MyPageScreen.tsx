@@ -64,7 +64,7 @@ const MypageScreen: React.FC = () => {
         {/* User Info */}
         <View style={styles.userSection}>
           <Image
-            source={require('../assets/profile.png')}
+            source={require('./src/user.png')}
             style={styles.avatarImage}
           />
           <View style={styles.userText}>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     width: wp("20%"),
     height: wp("20%"),
     borderRadius: wp("10%"),
-    backgroundColor: "#D9D9D9",
+    backgroundColor: "#FFFFFF",
   },
   userText: {
     marginLeft: wp("4%"),

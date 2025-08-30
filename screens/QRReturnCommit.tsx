@@ -144,10 +144,9 @@ export default function QRReturnCommit() {
           </Text>
           <Text style={styles.title}>우산을 반납하시겠습니까?</Text>
 
-          {/* 이미지 */}
           <View style={styles.imageContainer}>
             <Image
-              source={require("../assets/umbrella_borrow.png")}
+              source={require("../assets/umbrella.png")}
               style={styles.image}
               resizeMode="contain"
             />
@@ -197,8 +196,8 @@ const styles = StyleSheet.create({
     marginVertical: hp("2%"), // 위아래 여백 살짝만
   },
   image: {
-    width: wp("70%"),   // 화면 너비의 70% 정도
-    height: hp("50%"),  // 비율 자동 유지
+    width: wp("30%"),   // 화면 너비의 70% 정도
+    height: hp("30%"),  // 비율 자동 유지
     aspectRatio: 1,     // 정사각형 비율 유지
     resizeMode: "contain",
   },

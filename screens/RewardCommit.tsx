@@ -1,11 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from 'expo-linear-gradient';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Bubbles from "../components/src/bubbles.svg";
 
 export default function RewardCommit() {
   const navigation = useNavigation();
@@ -26,11 +30,9 @@ export default function RewardCommit() {
     loadStore();
   }, []);
 
-  
-
   return (
     <LinearGradient
-      colors={['#FFFFFF', '#CDD7E4', '#A1ACD280']}
+      colors={["#FFFFFF", "#CDD7E4", "#A1ACD280"]}
       locations={[0, 0.5, 1]}
       style={styles.container}
     >
@@ -45,8 +47,6 @@ export default function RewardCommit() {
         <Text style={styles.headerText}>리워드 받기</Text>
         <View style={{ width: wp("6%") }} />
       </View>
-
-      {/* 중앙 영역 */}
       <View style={styles.centerSection}>
         <View style={styles.visitSection}>
           <Text style={styles.question}>이 가게를 방문하셨나요?</Text>
@@ -57,14 +57,35 @@ export default function RewardCommit() {
         </View>
 
         <View style={styles.card}>
-          <View style={styles.imageBox} />
+          <View style={styles.modalImage} />
           <View style={styles.infoBox}>
             <Text style={styles.title}>{store ? store.name : "가게 이름 불러오는 중..."}</Text>
             <Text style={styles.address}>{store ? store.address : ""}</Text>
             <Text style={styles.distance}>시청역에서 도보 4분</Text>
-            <View style={styles.rewardTag}>
-              <Text style={styles.rewardText}>방문 리워드 방울이 {store?.bubbleCount ?? "0"}개 ●●●</Text>
-            </View>
+            <LinearGradient
+                colors={["#537BFF", "#8EC5FF"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+                style={{
+                  width: "100%",
+                  height: 35,
+                  borderRadius: 40,
+                  paddingHorizontal: 14,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ fontSize: 14, color: "white" }}>
+                  방문 리워드
+                </Text>
+                <Text
+                  style={{ fontSize: 14, color: "white", fontWeight: "bold" }}
+                >
+                  방울 3개
+                </Text>
+                <Bubbles />
+              </LinearGradient>
           </View>
         </View>
       </View>
@@ -111,7 +132,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: hp("10%"),
     justifyContent: "flex-start", // 세로 중앙 정렬
-    alignItems: "center",     // 가로 중앙 정렬
+    alignItems: "center", // 가로 중앙 정렬
   },
   shopRow: {
     flexDirection: "row",
@@ -138,7 +159,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp("2%"),
     paddingHorizontal: wp("4%"),
     alignItems: "center",
-    borderRadius: wp("3%"),
+    borderRadius: wp("10%"),
     backgroundColor: "#fff",
     marginBottom: hp("10%"),
     shadowColor: "#000",
@@ -146,12 +167,13 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
-  imageBox: {
-    width: wp("25%"),       // 가로 크기
-    height: hp("20%"),      // 세로 크기, 카드보다 크게 설정 가능,
-    aspectRatio: 1,
-    borderRadius: wp("2%"),
-    backgroundColor: "#ccc",
+  modalImage: {
+    backgroundColor: "#f0f0f0",
+    width: 100,
+    height: "100%",
+    borderRadius: 22,
+    resizeMode: "cover",
+    marginRight: 4,
   },
   infoBox: {
     flex: 7,
@@ -199,5 +221,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
-  },
+  }
 });

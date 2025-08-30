@@ -122,8 +122,8 @@ const PlaceDetail: React.FC<PlaceDetailProps> = ({
                   <Text style={{ fontSize: 14, color: "white" }}>
                     현재 남은 우산
                   </Text>
-                  <Text style={{ fontSize: 14, color: "white" }}>
-                    {/* {store.umbrellaCount ?? "?"}/30개 */}
+                  <Text style={{ fontSize: 14, color: "white", fontWeight: "bold" }}>
+                    22개/30개
                   </Text>
                 </LinearGradient>
               )}
